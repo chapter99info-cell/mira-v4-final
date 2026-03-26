@@ -1,0 +1,229 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: userId (Firebase Auth UID)
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required, email format)
+    //   - displayName: string (optional)
+    //   - photoURL: string (optional)
+    //   - role: string (required, 'admin' | 'client')
+    //   - createdAt: string (required, ISO 8601)
+    //   - medicalAlerts: string (optional)
+    //   - painPoints: list (optional)
+    //   - painLevel: number (optional)
+    //
+    // Collection: bookings
+    // Document ID: auto-generated
+    // Fields:
+    //   - clientId: string (required)
+    //   - clientName: string (required)
+    //   - serviceId: string (required)
+    //   - serviceName: string (required)
+    //   - therapistId: string (required)
+    //   - therapistName: string (required)
+    //   - date: string (required, YYYY-MM-DD)
+    //   - startTime: string (required, HH:mm)
+    //   - endTime: string (required, HH:mm)
+    //   - duration: number (required)
+    //   - price: number (required)
+    //   - status: string (required, 'pending' | 'confirmed' | 'cancelled')
+    //   - paymentStatus: string (required, 'unpaid' | 'deposit-paid' | 'fully-paid')
+    //   - isWalkIn: bool (required)
+    //   - createdAt: string (required, ISO 8601)
+    //   - needsHealthFundRebate: bool (optional)
+    //
+    // Collection: services
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required)
+    //   - description: string (required)
+    //   - fullPrice: number (required)
+    //   - depositAmount: number (required)
+    //   - duration: number (required)
+    //   - image: string (optional)
+    //
+    // Collection: staff
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required)
+    //   - role: string (required)
+    //   - avatar: string (optional)
+    //   - specialties: list (optional)
+    //   - status: string (required, 'Working' | 'Off')
+    //
+    // Collection: holidays
+    // Document ID: auto-generated
+    // Fields:
+    //   - startDate: string (required, YYYY-MM-DD)
+    //   - endDate: string (required, YYYY-MM-DD)
+    //   - message: string (required)
+    //   - type: string (required, 'holiday' | 'emergency')
+    //   - isActive: bool (required)
+    //   - createdAt: timestamp (optional)
+    //
+    // Collection: products
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required)
+    //   - price: number (required)
+    //   - timestamp: timestamp (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "chapter99info@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidDateString(dateStr) {
+      return dateStr is string && dateStr.matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.*Z?$");
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUser(data) {
+      return data.uid is string &&
+             data.email is string && isValidEmail(data.email) &&
+             data.role in ['admin', 'client'] &&
+             data.createdAt is string &&
+             (!('displayName' in data) || data.displayName is string) &&
+             (!('photoURL' in data) || data.photoURL is string) &&
+             (!('medicalAlerts' in data) || data.medicalAlerts is string) &&
+             (!('painPoints' in data) || data.painPoints is list) &&
+             (!('painLevel' in data) || data.painLevel is number);
+    }
+
+    function isValidBooking(data) {
+      return data.clientId is string &&
+             data.clientName is string &&
+             data.serviceId is string &&
+             data.serviceName is string &&
+             data.therapistId is string &&
+             data.therapistName is string &&
+             data.date is string &&
+             data.startTime is string &&
+             data.endTime is string &&
+             data.duration is number &&
+             data.price is number &&
+             data.status in ['pending', 'confirmed', 'cancelled'] &&
+             data.paymentStatus in ['unpaid', 'deposit-paid', 'fully-paid'] &&
+             data.isWalkIn is bool &&
+             data.createdAt is string;
+    }
+
+    function isValidService(data) {
+      return data.name is string &&
+             data.description is string &&
+             data.fullPrice is number &&
+             data.depositAmount is number &&
+             data.duration is number &&
+             (!('image' in data) || data.image is string);
+    }
+
+    function isValidStaff(data) {
+      return data.name is string &&
+             data.role is string &&
+             (!('avatar' in data) || data.avatar is string) &&
+             (!('specialties' in data) || data.specialties is list) &&
+             data.status in ['Working', 'Off'];
+    }
+
+    function isValidHoliday(data) {
+      return hasOnlyAllowedFields(['startDate', 'endDate', 'message', 'type', 'isActive', 'createdAt']) &&
+             data.startDate is string && data.startDate.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.endDate is string && data.endDate.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.message is string && data.message.size() > 0 && data.message.size() < 500 &&
+             data.type in ['holiday', 'emergency'] &&
+             data.isActive is bool &&
+             (!('createdAt' in data) || data.createdAt is timestamp);
+    }
+
+    function isValidProduct(data) {
+      return hasOnlyAllowedFields(['name', 'price', 'timestamp']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.price is number && data.price >= 0 &&
+             data.timestamp is timestamp;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isAuthenticated() && isOwner(userId) && 
+                      isValidUser(request.resource.data) && 
+                      (request.resource.data.role == 'client' || isAdmin());
+      allow update: if isAuthenticated() && 
+                      isValidUser(request.resource.data) && 
+                      ((isOwner(userId) && request.resource.data.role == resource.data.role) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && 
+                      request.resource.data.clientId == request.auth.uid &&
+                      isValidBooking(request.resource.data);
+      allow update: if isAuthenticated() && 
+                      (resource.data.clientId == request.auth.uid || isAdmin()) &&
+                      isValidBooking(request.resource.data) &&
+                      (isAdmin() || request.resource.data.clientId == resource.data.clientId);
+      allow delete: if isAdmin();
+    }
+
+    match /services/{serviceId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isValidService(request.resource.data);
+    }
+
+    match /staff/{staffId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isValidStaff(request.resource.data);
+    }
+
+    match /holidays/{holidayId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidHoliday(request.resource.data);
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidProduct(request.resource.data);
+    }
+
+    // Default deny
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}
