@@ -3,7 +3,7 @@ import { Service, Staff, Holiday } from './types';
 export const brandConfig = {
   name: "MIRA Remedial Thai Massage",
   description: "Traditional Thai healing meets modern clinical precision. Experience the art of massage in a sanctuary designed for your recovery.",
-  location: "Altona, Melbourne, VIC 3018",
+  location: "Level 1/76 Pier Street, Altona 3018",
   phone: "046699 2456",
   email: "miraremedial@gmail.com",
   logo: "https://firebasestorage.googleapis.com/v0/b/studio-6368441530-fca54.firebasestorage.app/o/chapter99%20studio%2FMira%20Thai%20Massage%2Flogo%20Mira%2FLogo%20-%20MIRA-02.jpg?alt=media&token=d907378d-34fa-4c09-be94-07f039855304",

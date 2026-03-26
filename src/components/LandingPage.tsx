@@ -138,7 +138,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-primary uppercase tracking-widest">Open Daily</h4>
-                    <p className="text-[10px] text-earth/50">9:00 AM — 8:00 PM</p>
+                    <p className="text-[10px] text-earth/50">10:00 AM — 8:00 PM</p>
                   </div>
                 </div>
               </div>
@@ -340,7 +340,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                   <div className="space-y-1">
                     <p className="text-[10px] font-bold text-sage uppercase tracking-[0.3em]">Opening Hours</p>
                     <p className="text-xl font-serif font-bold text-primary leading-tight">
-                      Mon-Sun: 10:00 AM - 9:00 PM
+                      7 Days: 10:00 AM - 8:00 PM
                     </p>
                   </div>
                 </div>
@@ -427,13 +427,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 mb-20">
           {/* Brand & Trust */}
           <div className="space-y-8">
-            <div className="space-y-4">
-              <h4 className="font-serif text-3xl font-bold tracking-tight">{brandConfig.name}</h4>
-              <div className="flex items-center gap-3 text-white/60">
-                <MapPin size={18} className="text-secondary" />
-                <p className="text-sm font-medium">Altona, Melbourne, VIC</p>
-              </div>
-            </div>
+                <div className="space-y-4">
+                  <h4 className="font-serif text-3xl font-bold tracking-tight">{brandConfig.name}</h4>
+                  <div className="flex items-center gap-3 text-white/60">
+                    <MapPin size={18} className="text-secondary" />
+                    <p className="text-sm font-medium">Level 1/76 Pier Street, Altona 3018</p>
+                  </div>
+                </div>
             
             <div className="inline-flex items-center gap-3 bg-white/5 border border-white/10 px-5 py-3 rounded-2xl">
               <ShieldCheck className="text-secondary" size={20} />
