@@ -3,13 +3,16 @@ import { LandingPage } from './components/LandingPage';
 import { V4Dashboard } from './components/V4Dashboard';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
+// หมายเหตุ: ผมถอด AiConcierge ออกชั่วคราวเผื่อใน GitHub คุณยังไม่มีไฟล์นี้ เว็บจะได้ไม่พังครับ
+// import { AiConcierge } from './components/AiConcierge'; 
+
 function AppContent() {
   const [view, setView] = useState<'landing' | 'dashboard'>('landing');
-  const [isAuthorized, setIsAuthorized] = useState(false); // เช็คว่าใส่รหัสผ่านหรือยัง
-// ของใหม่ (กดแล้วโทรออกทันที)
-const handleBook = () => {
-  window.location.href = 'tel:0466992456';
-};
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  // แก้ไขตรงนี้ให้เป็นการโทรออกแทนลิงก์เว็บ
+  const handleBook = () => {
+    window.location.href = 'tel:0466992456';
   };
 
   const handleAdminClick = () => {
@@ -31,10 +34,11 @@ const handleBook = () => {
       {view === 'landing' ? (
         <>
           <LandingPage onBookNow={handleBook} />
-          {/* ปุ่ม Admin ที่คุณต้องการรหัส 9999 */}
+          {/* <AiConcierge /> */} {/* เปิดใช้งานบรรทัดนี้หากคุณสร้างไฟล์ AiConcierge แล้ว */}
+          
           <button 
             onClick={handleAdminClick}
-            className="fixed bottom-6 right-6 bg-white/10 backdrop-blur-md text-earth/20 p-2 rounded-full text-[8px] font-bold uppercase tracking-widest hover:bg-white hover:text-primary transition-all z-[100]"
+            className="fixed bottom-6 left-6 bg-white/10 backdrop-blur-md text-earth/20 p-2 rounded-full text-[8px] font-bold uppercase tracking-widest hover:bg-white hover:text-primary transition-all z-[100]"
           >
             Admin
           </button>
