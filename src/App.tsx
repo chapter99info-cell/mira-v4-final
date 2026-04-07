@@ -6,9 +6,10 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 function AppContent() {
   const [view, setView] = useState<'landing' | 'dashboard'>('landing');
   const [isAuthorized, setIsAuthorized] = useState(false); // เช็คว่าใส่รหัสผ่านหรือยัง
-
-  const handleBook = () => {
-    window.open('https://mira.book.receptionerapp.com/', '_blank');
+// ของใหม่ (กดแล้วโทรออกทันที)
+const handleBook = () => {
+  window.location.href = 'tel:0466992456';
+};
   };
 
   const handleAdminClick = () => {
