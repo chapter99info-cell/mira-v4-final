@@ -80,7 +80,7 @@ export const brandConfig = {
       fullPrice: 105,
       depositAmount: 40,
       duration: 60,
-      image: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&q=80&w=800&h=600",
+      image: "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&q=80&w=800&h=600",
       rates: { "30": 75, "60": 105, "90": 155, "120": 205 },
       bestFor: "Severe muscle tightness & structural imbalances",
       keyBenefits: ["Maximum Pain Relief", "Clinical Expertise", "Deep Muscle Alignment"],
