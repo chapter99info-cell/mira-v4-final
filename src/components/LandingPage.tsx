@@ -11,8 +11,9 @@ interface LandingPageProps {
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
   const handleBookNow = () => {
-    window.open('https://mira.book.receptionerapp.com/', '_blank');
-  };
+const handleBookNow = () => {
+  window.location.href = 'tel:0466992456';
+};
 
   return (
     <div className="bg-white text-earth selection:bg-primary/20 font-sans min-h-screen pb-24">
