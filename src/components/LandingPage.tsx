@@ -9,15 +9,14 @@ interface LandingPageProps {
   onBookNow: (service?: Service, withCoconut?: boolean, duration?: number) => void;
 }
   export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
-  // แก้ไขฟังก์ชันให้เหลือชั้นเดียวและเรียกเบอร์โทร
+  
   const handleBookNow = () => {
     window.location.href = 'tel:0466992456';
   };
 
   return (
     <div className="bg-white text-earth selection:bg-primary/20 font-sans min-h-screen pb-24">
-      {/* ส่วนที่เหลือของโค้ดคุณ... */}
-      {/* Header (The Hero) */}
+     
       <section className="relative h-[70vh] md:h-[85vh] flex flex-col items-center justify-start overflow-hidden">
         {/* Mural Background with Gradient Fade */}
         <div className="absolute inset-0">
