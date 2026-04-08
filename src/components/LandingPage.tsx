@@ -139,47 +139,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
         </div>
       </section>
 
-      {/* My Picks & Category Tabs */}
-      <section id="services" className="py-12 bg-white sticky top-0 z-40 border-b border-beige/10 shadow-sm">
+      {/* Services Section (Stacked & Normal) */}
+      <section id="services" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col gap-8">
-            {/* My Picks Carousel */}
-            {myPicks.length > 0 && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Sparkles size={16} className="text-secondary" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">My Picks / เมนูแนะนำ</span>
-                </div>
-                <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar">
-                  {myPicks.map(service => (
-                    <motion.div
-                      key={service.id}
-                      whileHover={{ scale: 1.02 }}
-                      onClick={handleBookNow}
-                      className="flex-shrink-0 w-64 bg-section rounded-3xl p-4 border border-primary/5 cursor-pointer group"
-                    >
-                      <div className="relative aspect-video rounded-2xl overflow-hidden mb-3">
-                        <img src={service.image} alt={service.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                        <div className="absolute inset-0 bg-black/10" />
-                      </div>
-                      <h4 className="text-xs font-bold text-primary mb-1 truncate">{service.name}</h4>
-                      <p className="text-[10px] text-earth/50 font-medium">${service.fullPrice} • {service.duration}M</p>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Category Tabs */}
-            <div className="flex items-center justify-center gap-2 md:gap-4 overflow-x-auto no-scrollbar py-2">
+          <div className="text-center mb-16">
+            <span className="text-sage text-xs font-bold uppercase tracking-[0.4em] mb-4 block">Our Heritage</span>
+            <h2 className="text-4xl md:text-6xl font-serif font-bold text-primary mb-8">Healing Services</h2>
+            <div className="w-24 h-1 bg-secondary mx-auto rounded-full mb-12" />
+            
+            {/* Category Tabs (Centered & Simple) */}
+            <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-16">
               {categories.map(cat => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat as any)}
-                  className={`px-6 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${
+                  className={`px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
                     activeCategory === cat 
-                      ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                      : 'bg-section text-earth/40 hover:bg-earth/5'
+                      ? 'bg-primary text-white shadow-xl shadow-primary/20 scale-105' 
+                      : 'bg-section text-earth/40 hover:bg-earth/10'
                   }`}
                 >
                   {cat}
@@ -187,92 +164,116 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
               ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Service Grid (Modern Mix) */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <span className="text-sage text-xs font-bold uppercase tracking-[0.4em] mb-4 block">Our Heritage</span>
-          <h2 className="text-3xl md:text-5xl font-serif font-bold text-primary">Healing Services</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {filteredServices.map((service, index) => (
-            <motion.div
-              key={service.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group bg-white rounded-[3rem] shadow-xl shadow-earth/5 border border-beige/10 cursor-pointer transition-all hover:border-primary/20 overflow-hidden"
-              onClick={handleBookNow}
-            >
-              <div className="relative w-full aspect-[4/3]">
-                {service.video ? (
-                  <video 
-                    autoPlay 
-                    loop 
-                    muted 
-                    playsInline
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  >
-                    <source src={service.video} type="video/mp4" />
-                  </video>
-                ) : (
-                  <img 
-                    src={service.image} 
-                    alt={service.name} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
-                <div className="absolute bottom-6 left-6 right-6">
-                  <h3 className="text-2xl font-serif font-bold text-white mb-1 leading-tight">
-                    {service.name}
-                  </h3>
-                  <p className="text-white/80 text-xs font-medium tracking-wide">
-                    ${Math.min(...(Object.values(service.rates) as number[]))} — {service.duration}M
-                  </p>
-                </div>
+          {/* My Picks (Simple Grid) */}
+          {myPicks.length > 0 && activeCategory === 'All' && (
+            <div className="mb-24 space-y-12">
+              <div className="flex items-center justify-center gap-3">
+                <Sparkles size={20} className="text-secondary" />
+                <h3 className="text-xl font-serif font-bold text-primary">My Picks / เมนูแนะนำ</h3>
+                <Sparkles size={20} className="text-secondary" />
               </div>
-              
-              <div className="p-8 space-y-6">
-                <div className="space-y-2">
-                  <p className="text-earth/60 text-sm leading-relaxed line-clamp-2">
-                    {service.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {service.keyBenefits.slice(0, 2).map((benefit, i) => (
-                      <span key={i} className="text-[10px] text-sage font-bold uppercase tracking-widest bg-sage/5 px-3 py-1 rounded-full">
-                        {benefit}
-                      </span>
-                    ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                {myPicks.map(service => (
+                  <motion.div
+                    key={service.id}
+                    whileHover={{ y: -5 }}
+                    onClick={handleBookNow}
+                    className="bg-section rounded-[2.5rem] p-6 border border-primary/5 cursor-pointer group flex gap-6 items-center"
+                  >
+                    <div className="relative w-32 h-32 rounded-2xl overflow-hidden flex-shrink-0 shadow-lg">
+                      <img src={service.image} alt={service.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      <div className="absolute inset-0 bg-black/10" />
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-lg font-serif font-bold text-primary leading-tight">{service.name}</h4>
+                      <p className="text-xs text-earth/50 font-medium uppercase tracking-widest">${service.fullPrice} • {service.duration}M</p>
+                      <button className="text-[10px] font-bold text-sage uppercase tracking-widest border-b border-sage/30 pb-1">Book Now</button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Main Service Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {filteredServices.map((service, index) => (
+              <motion.div
+                key={service.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group bg-white rounded-[3rem] shadow-xl shadow-earth/5 border border-beige/10 cursor-pointer transition-all hover:border-primary/20 overflow-hidden"
+                onClick={handleBookNow}
+              >
+                <div className="relative w-full aspect-[4/3]">
+                  {service.video ? (
+                    <video 
+                      autoPlay 
+                      loop 
+                      muted 
+                      playsInline
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    >
+                      <source src={service.video} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <img 
+                      src={service.image} 
+                      alt={service.name} 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <h3 className="text-2xl font-serif font-bold text-white mb-1 leading-tight">
+                      {service.name}
+                    </h3>
+                    <p className="text-white/80 text-xs font-medium tracking-wide">
+                      ${Math.min(...(Object.values(service.rates) as number[]))} — {service.duration}M
+                    </p>
                   </div>
                 </div>
+                
+                <div className="p-8 space-y-6">
+                  <div className="space-y-2">
+                    <p className="text-earth/60 text-sm leading-relaxed line-clamp-2">
+                      {service.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {service.keyBenefits.slice(0, 2).map((benefit, i) => (
+                        <span key={i} className="text-[10px] text-sage font-bold uppercase tracking-widest bg-sage/5 px-3 py-1 rounded-full">
+                          {benefit}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  {Object.keys(service.rates).slice(0, 4).map(duration => (
-                    <button 
-                      key={duration} 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleBookNow();
-                      }}
-                      className="flex items-center justify-between px-4 py-3 bg-section rounded-2xl text-[10px] font-bold text-primary uppercase tracking-widest border border-beige/10 hover:bg-primary hover:text-white transition-all"
-                    >
-                      <span>{duration}M</span>
-                      <span>${service.rates[duration]}</span>
-                    </button>
-                  ))}
+                  <div className="grid grid-cols-2 gap-3">
+                    {Object.keys(service.rates).slice(0, 4).map(duration => (
+                      <button 
+                        key={duration} 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBookNow();
+                        }}
+                        className="flex items-center justify-between px-4 py-3 bg-section rounded-2xl text-[10px] font-bold text-primary uppercase tracking-widest border border-beige/10 hover:bg-primary hover:text-white transition-all"
+                      >
+                        <span>{duration}M</span>
+                        <span>${service.rates[duration]}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <button className="w-full bg-primary text-white py-4 rounded-2xl text-xs font-bold uppercase tracking-[0.2em] shadow-lg shadow-primary/20 group-hover:bg-sage transition-all">
+                    Book Appointment
+                  </button>
                 </div>
-
-                <button className="w-full bg-primary text-white py-4 rounded-2xl text-xs font-bold uppercase tracking-[0.2em] shadow-lg shadow-primary/20 group-hover:bg-sage transition-all">
-                  Book Appointment
-                </button>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
