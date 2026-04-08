@@ -24,6 +24,7 @@ export interface Service {
   bestFor: string;
   keyBenefits: string[];
   category?: 'Standard' | 'Remedial';
+  is_my_pick?: boolean;
 }
 
 export interface Staff {

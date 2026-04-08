@@ -1,7 +1,7 @@
 import { Service, Staff, Holiday } from './types';
 
 export const brandConfig = {
-  name: "MIRA Remedial Thai Massage",
+  name: "Mira Thai Massage Altona (HICAPS)",
   description: "Traditional Thai healing meets modern clinical precision. Experience the art of massage in a sanctuary designed for your recovery.",
   location: "Level 1/76 Pier Street, Altona 3018",
   phone: "0466992456",
@@ -29,7 +29,8 @@ export const brandConfig = {
       rates: { "30": 60, "45": 75, "60": 90, "90": 130 },
       bestFor: "Stress relief & pure relaxation",
       keyBenefits: ["Stress Relief", "Gentle Stretching", "Aromatherapy"],
-      category: 'Standard'
+      category: 'Standard',
+      is_my_pick: true
     },
     {
       id: "thai-deep-tissue-oil",
@@ -80,11 +81,12 @@ export const brandConfig = {
       fullPrice: 105,
       depositAmount: 40,
       duration: 60,
-      image: "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&q=80&w=800&h=600",
+      image: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&q=80&w=800&h=600",
       rates: { "30": 75, "60": 105, "90": 155, "120": 205 },
       bestFor: "Severe muscle tightness & structural imbalances",
       keyBenefits: ["Maximum Pain Relief", "Clinical Expertise", "Deep Muscle Alignment"],
-      category: 'Remedial'
+      category: 'Remedial',
+      is_my_pick: true
     }
   ] as Service[],
   staff: [

@@ -2,17 +2,15 @@ import React, { useState } from 'react';
 import { LandingPage } from './components/LandingPage';
 import { V4Dashboard } from './components/V4Dashboard';
 import { ErrorBoundary } from './components/ErrorBoundary';
-
-// หมายเหตุ: ผมถอด AiConcierge ออกชั่วคราวเผื่อใน GitHub คุณยังไม่มีไฟล์นี้ เว็บจะได้ไม่พังครับ
-// import { AiConcierge } from './components/AiConcierge'; 
+import { AiConcierge } from './components/AiConcierge';
+import { brandConfig } from './brandConfig';
 
 function AppContent() {
   const [view, setView] = useState<'landing' | 'dashboard'>('landing');
   const [isAuthorized, setIsAuthorized] = useState(false);
 
-  // แก้ไขตรงนี้ให้เป็นการโทรออกแทนลิงก์เว็บ
   const handleBook = () => {
-    window.location.href = 'tel:0466992456';
+    window.location.href = `tel:${brandConfig.phone}`;
   };
 
   const handleAdminClick = () => {
@@ -34,7 +32,7 @@ function AppContent() {
       {view === 'landing' ? (
         <>
           <LandingPage onBookNow={handleBook} />
-          {/* <AiConcierge /> */} {/* เปิดใช้งานบรรทัดนี้หากคุณสร้างไฟล์ AiConcierge แล้ว */}
+          <AiConcierge />
           
           <button 
             onClick={handleAdminClick}
