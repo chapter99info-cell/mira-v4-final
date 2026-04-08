@@ -85,80 +85,57 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
         </motion.div>
       </section>
 
-      {/* Atmosphere Video Section */}
+      {/* Atmosphere Section (Stacked for Simplicity) */}
       <section className="py-24 bg-section overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="space-y-8"
-            >
-              <span className="text-sage text-xs font-bold uppercase tracking-[0.4em] block">The Atmosphere</span>
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary leading-tight">
-                A Sanctuary for <br />
-                <span className="italic text-sage">Mind & Body</span>
-              </h2>
-              <p className="text-earth/60 text-lg leading-relaxed font-light">
-                Step into a world where time slows down. Our sanctuary is designed to transport you to a state of deep tranquility, combining the natural warmth of Thai hospitality with a serene, modern aesthetic.
-              </p>
-              <div className="flex items-center gap-6 pt-4">
-                <div className="flex -space-x-3">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="w-12 h-12 rounded-full border-2 border-white overflow-hidden">
-                      <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`} alt="User" className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-                <p className="text-xs font-bold text-primary uppercase tracking-widest">
-                  Trusted by <span className="text-sage">500+</span> monthly guests
-                </p>
-              </div>
-            </motion.div>
+        <div className="max-w-4xl mx-auto px-6 text-center space-y-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="space-y-8"
+          >
+            <span className="text-sage text-xs font-bold uppercase tracking-[0.4em] block">The Atmosphere</span>
+            <h2 className="text-4xl md:text-6xl font-serif font-bold text-primary leading-tight">
+              A Sanctuary for <br />
+              <span className="italic text-sage">Mind & Body</span>
+            </h2>
+            <p className="text-earth/60 text-lg md:text-xl leading-relaxed font-light max-w-2xl mx-auto">
+              Step into a world where time slows down. Our sanctuary is designed to transport you to a state of deep tranquility, combining the natural warmth of Thai hospitality with a serene, modern aesthetic.
+            </p>
+          </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="relative group"
-            >
-              <div className="relative aspect-video rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white bg-beige/10">
-                {(brandConfig as any).promoVideo ? (
-                  <video 
-                    autoPlay 
-                    loop 
-                    muted 
-                    playsInline
-                    className="w-full h-full object-cover"
-                  >
-                    <source src={(brandConfig as any).promoVideo} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                ) : (
-                  <img 
-                    src={brandConfig.heroImage} 
-                    alt="Atmosphere" 
-                    className="w-full h-full object-cover"
-                  />
-                )}
-                <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-500" />
-              </div>
-              
-              {/* Floating Badge */}
-              <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-[2rem] shadow-xl border border-beige/10 hidden md:block">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-sage/10 flex items-center justify-center text-sage">
-                    <Clock size={24} />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-primary uppercase tracking-widest">Open Daily</h4>
-                    <p className="text-[10px] text-earth/50">10:00 AM — 8:00 PM</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            <div className="relative aspect-video rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white bg-beige/10">
+              {(brandConfig as any).promoVideo ? (
+                <video 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
+                  className="w-full h-full object-cover"
+                >
+                  <source src={(brandConfig as any).promoVideo} type="video/mp4" />
+                </video>
+              ) : (
+                <img 
+                  src={brandConfig.heroImage} 
+                  alt="Atmosphere" 
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </div>
+            
+            {/* Simple Badge */}
+            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white px-8 py-4 rounded-2xl shadow-xl border border-beige/10 flex items-center gap-4 whitespace-nowrap">
+              <Clock size={20} className="text-sage" />
+              <span className="text-xs font-bold text-primary uppercase tracking-widest">Open Daily: 10am — 8pm</span>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -220,7 +197,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
           <h2 className="text-3xl md:text-5xl font-serif font-bold text-primary">Healing Services</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {filteredServices.map((service, index) => (
             <motion.div
               key={service.id}
@@ -228,11 +205,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -10 }}
-              className="group bg-white p-8 rounded-[3rem] shadow-xl shadow-earth/5 border border-beige/10 cursor-pointer transition-all hover:border-primary/20"
+              className="group bg-white rounded-[3rem] shadow-xl shadow-earth/5 border border-beige/10 cursor-pointer transition-all hover:border-primary/20 overflow-hidden"
               onClick={handleBookNow}
             >
-              <div className="relative w-full aspect-square mb-8 rounded-[2rem] overflow-hidden">
+              <div className="relative w-full aspect-[4/3]">
                 {service.video ? (
                   <video 
                     autoPlay 
@@ -250,117 +226,50 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
-                  <button className="w-full bg-white text-primary py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg">
-                    Book Now
-                  </button>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                <div className="absolute bottom-6 left-6 right-6">
+                  <h3 className="text-2xl font-serif font-bold text-white mb-1 leading-tight">
+                    {service.name}
+                  </h3>
+                  <p className="text-white/80 text-xs font-medium tracking-wide">
+                    ${Math.min(...(Object.values(service.rates) as number[]))} — {service.duration}M
+                  </p>
                 </div>
               </div>
               
-              <div className="text-center">
-                <h3 className="text-xl font-serif font-bold text-primary mb-1 group-hover:text-sage transition-colors leading-tight">
-                  {service.name}
-                </h3>
-                <div className="mb-4">
-                  <span className="text-[10px] font-bold text-sage uppercase tracking-wider bg-sage/5 px-2 py-0.5 rounded-md">
-                    Best for: {service.bestFor}
-                  </span>
+              <div className="p-8 space-y-6">
+                <div className="space-y-2">
+                  <p className="text-earth/60 text-sm leading-relaxed line-clamp-2">
+                    {service.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {service.keyBenefits.slice(0, 2).map((benefit, i) => (
+                      <span key={i} className="text-[10px] text-sage font-bold uppercase tracking-widest bg-sage/5 px-3 py-1 rounded-full">
+                        {benefit}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="text-left space-y-4 mb-6">
-                  <div>
-                    <h4 className="text-[9px] font-bold uppercase tracking-widest text-earth/30 mb-1.5">Service Details</h4>
-                    <p className="text-earth/50 text-[11px] leading-relaxed line-clamp-3">
-                      {service.description}
-                    </p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-[9px] font-bold uppercase tracking-widest text-earth/30 mb-2">Key Benefits</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {service.keyBenefits.map((benefit, i) => (
-                        <span key={i} className="text-[9px] text-earth/60 bg-section px-2 py-0.5 rounded-full border border-beige/10">
-                          {benefit}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex flex-wrap justify-center gap-2 mb-6">
-                  {Object.keys(service.rates).map(duration => (
+                <div className="grid grid-cols-2 gap-3">
+                  {Object.keys(service.rates).slice(0, 4).map(duration => (
                     <button 
                       key={duration} 
                       onClick={(e) => {
                         e.stopPropagation();
                         handleBookNow();
                       }}
-                      className="flex flex-col items-center px-3 py-2 bg-section rounded-xl text-[9px] font-bold text-earth/40 uppercase tracking-widest border border-beige/10 hover:border-primary/40 hover:text-primary transition-all hover:bg-white min-w-[54px]"
+                      className="flex items-center justify-between px-4 py-3 bg-section rounded-2xl text-[10px] font-bold text-primary uppercase tracking-widest border border-beige/10 hover:bg-primary hover:text-white transition-all"
                     >
                       <span>{duration}M</span>
-                      <span className="text-primary mt-1 text-[10px]">${service.rates[duration]}</span>
+                      <span>${service.rates[duration]}</span>
                     </button>
                   ))}
                 </div>
 
-                {/* Coconut Oil Upsell */}
-                {service.id !== 'thai-massage-no-oil' && (
-                  <div className="space-y-3 mb-6">
-                    <div className="p-4 bg-sage/5 rounded-2xl border border-sage/10 relative overflow-hidden group/upsell">
-                      <div className="absolute top-0 right-0 bg-sage text-white text-[7px] font-bold px-2 py-0.5 rounded-bl-lg uppercase tracking-widest">
-                        Guest Favorite
-                      </div>
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-sage shadow-sm">
-                          <Sparkles size={14} />
-                        </div>
-                        <div className="text-left">
-                          <h5 className="text-[10px] font-bold text-primary uppercase tracking-wider">Upgrade to Coconut Oil</h5>
-                          <p className="text-[8px] text-earth/50 font-medium">Nourishing & Organic</p>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleBookNow();
-                        }}
-                        className="w-full bg-white text-sage border border-sage/30 py-2.5 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-sage hover:text-white transition-all shadow-sm flex items-center justify-center gap-1"
-                      >
-                        Add +$5 <ChevronRight size={12} />
-                      </button>
-                    </div>
-
-                    <div className="p-4 bg-primary/5 rounded-2xl border border-primary/10 relative overflow-hidden group/upsell">
-                      <div className="absolute top-0 right-0 bg-primary text-white text-[7px] font-bold px-2 py-0.5 rounded-bl-lg uppercase tracking-widest">
-                        Premium Choice
-                      </div>
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-primary shadow-sm">
-                          <Sparkles size={14} />
-                        </div>
-                        <div className="text-left">
-                          <h5 className="text-[10px] font-bold text-primary uppercase tracking-wider">Upgrade to Almond Oil</h5>
-                          <p className="text-[8px] text-earth/50 font-medium">Sweet & Skin-Softening</p>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleBookNow();
-                        }}
-                        className="w-full bg-white text-primary border border-primary/30 py-2.5 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm flex items-center justify-center gap-1"
-                      >
-                        Add +$10 <ChevronRight size={12} />
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <div className="pt-4 border-t border-beige/10 flex items-center justify-center gap-2 text-primary">
-                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Starting from</span>
-                  <span className="text-lg font-serif font-bold">${Math.min(...(Object.values(service.rates) as number[]))}</span>
-                </div>
+                <button className="w-full bg-primary text-white py-4 rounded-2xl text-xs font-bold uppercase tracking-[0.2em] shadow-lg shadow-primary/20 group-hover:bg-sage transition-all">
+                  Book Appointment
+                </button>
               </div>
             </motion.div>
           ))}
@@ -370,80 +279,63 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
       {/* Customer Reviews Section */}
       <CustomerReviews />
 
-      {/* Find Us Section */}
+      {/* Find Us Section (Strictly Stacked) */}
       <section id="location" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-16">
             <span className="text-sage text-xs font-bold uppercase tracking-[0.4em] mb-4 block">Visit Us</span>
-            <h2 className="text-3xl md:text-5xl font-serif font-bold text-primary">Find Us</h2>
+            <h2 className="text-4xl md:text-6xl font-serif font-bold text-primary">Find Us</h2>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Info Column */}
+          <div className="space-y-16">
+            {/* Contact Info (Vertical Stack) */}
             <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="space-y-10"
+              className="space-y-8"
             >
-              <div className="space-y-8">
-                <div className="flex items-start gap-6 group">
-                  <div className="w-14 h-14 rounded-2xl bg-section flex items-center justify-center text-secondary shadow-sm group-hover:bg-secondary group-hover:text-white transition-all duration-300">
-                    <MapPin size={28} />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-bold text-sage uppercase tracking-[0.3em]">Our Location</p>
-                    <p className="text-xl font-serif font-bold text-primary leading-tight">
-                      {brandConfig.location}
-                    </p>
-                  </div>
+              <div className="flex flex-col items-center text-center space-y-4 p-10 bg-section rounded-[3rem] border border-beige/10">
+                <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-secondary shadow-sm mb-2">
+                  <MapPin size={32} />
                 </div>
-
-                <div className="flex items-start gap-6 group">
-                  <div className="w-14 h-14 rounded-2xl bg-section flex items-center justify-center text-secondary shadow-sm group-hover:bg-secondary group-hover:text-white transition-all duration-300">
-                    <Clock size={28} />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-bold text-sage uppercase tracking-[0.3em]">Opening Hours</p>
-                    <p className="text-xl font-serif font-bold text-primary leading-tight">
-                      7 Days: 10:00 AM - 8:00 PM
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-6 group">
-                  <div className="w-14 h-14 rounded-2xl bg-section flex items-center justify-center text-secondary shadow-sm group-hover:bg-secondary group-hover:text-white transition-all duration-300">
-                    <Phone size={28} />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-bold text-sage uppercase tracking-[0.3em]">Contact Us</p>
-                    <p className="text-xl font-serif font-bold text-primary leading-tight">
-                      Available in Footer
-                    </p>
-                  </div>
-                </div>
+                <p className="text-xs font-bold text-sage uppercase tracking-[0.4em]">Our Location</p>
+                <p className="text-2xl md:text-3xl font-serif font-bold text-primary max-w-xl">
+                  {brandConfig.location}
+                </p>
               </div>
 
-              <div className="pt-4 space-y-4">
+              <div className="flex flex-col items-center text-center space-y-4 p-10 bg-section rounded-[3rem] border border-beige/10">
+                <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-secondary shadow-sm mb-2">
+                  <Clock size={32} />
+                </div>
+                <p className="text-xs font-bold text-sage uppercase tracking-[0.4em]">Opening Hours</p>
+                <p className="text-2xl md:text-3xl font-serif font-bold text-primary">
+                  7 Days: 10:00 AM - 8:00 PM
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center text-center space-y-4 p-12 bg-primary text-white rounded-[3rem] shadow-2xl shadow-primary/20">
+                <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-secondary shadow-sm mb-2">
+                  <Phone size={32} />
+                </div>
+                <p className="text-xs font-bold text-secondary uppercase tracking-[0.4em]">Contact Us / โทรจองคิว</p>
                 <a 
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(brandConfig.location)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 bg-secondary text-white px-10 py-6 rounded-2xl text-base font-bold uppercase tracking-[0.2em] hover:bg-primary transition-all shadow-2xl shadow-secondary/40 hover:scale-[1.02] active:scale-95 justify-center group relative overflow-hidden"
+                  href={`tel:${brandConfig.phone.replace(/\s+/g, '')}`}
+                  className="text-4xl md:text-6xl font-serif font-bold hover:text-secondary transition-colors tracking-tight"
                 >
-                  <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                  <MapPin size={22} className="relative z-10" />
-                  <span className="relative z-10">Get Directions / นำทาง</span>
+                  {brandConfig.phone}
                 </a>
+                <p className="text-white/50 text-xs font-medium uppercase tracking-widest pt-2">Click to call instantly</p>
               </div>
             </motion.div>
 
-            {/* Map Column */}
+            {/* Map Section (Full Width) */}
             <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative aspect-square rounded-[4rem] overflow-hidden shadow-2xl border-8 border-section"
+              className="relative w-full aspect-video rounded-[3rem] overflow-hidden shadow-2xl border-8 border-section"
             >
               <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3148.976543210!2d144.831!3d-37.868!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad6615866666667%3A0x5045675218ce6e0!2sLevel%201%2F76%20Pier%20St%2C%20Altona%20VIC%203018%2C%20Australia!5e0!3m2!1sen!2sau!4v1711415491000!5m2!1sen!2sau"
@@ -456,6 +348,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                 title="Mira Thai Massage Altona Location"
               />
             </motion.div>
+
+            {/* Directions Button */}
+            <div className="flex justify-center pt-4">
+              <a 
+                href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(brandConfig.location)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 bg-secondary text-white px-16 py-8 rounded-3xl text-lg font-bold uppercase tracking-[0.2em] hover:bg-primary transition-all shadow-2xl shadow-secondary/40 hover:scale-[1.02] active:scale-95 justify-center group relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                <MapPin size={24} className="relative z-10" />
+                <span className="relative z-10">Get Directions / นำทาง</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -529,12 +435,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
             <h5 className="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary">Contact Us</h5>
             <div className="space-y-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-secondary">
-                  <Phone size={22} />
+                <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-secondary">
+                  <Phone size={28} />
                 </div>
                 <div className="flex flex-col">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Call for Booking</p>
-                  <a href={`tel:${brandConfig.phone.replace(/\s+/g, '')}`} className="text-xl font-serif font-bold hover:text-secondary transition-colors">
+                  <a href={`tel:${brandConfig.phone.replace(/\s+/g, '')}`} className="text-3xl font-serif font-bold text-secondary hover:text-white transition-colors tracking-tight">
                     {brandConfig.phone}
                   </a>
                 </div>
@@ -542,7 +448,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
               
               <a 
                 href={`tel:${brandConfig.phone.replace(/\s+/g, '')}`}
-                className="w-full bg-secondary text-white py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-white hover:text-primary transition-all shadow-xl shadow-secondary/10 flex items-center justify-center"
+                className="w-full bg-secondary text-white py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-white hover:text-primary transition-all shadow-xl shadow-secondary/10 flex items-center justify-center text-sm"
               >
                 Book Your Session / โทรจองคิว
               </a>
