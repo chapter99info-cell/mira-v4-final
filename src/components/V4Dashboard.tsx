@@ -25,7 +25,11 @@ import { Booking, Service, Product } from '../types';
 import { brandConfig } from '../brandConfig';
 import { apiService } from '../services/api';
 
-export const V4Dashboard: React.FC = () => {
+interface V4DashboardProps {
+  mode: 'staff-pos' | 'owner-dashboard' | 'admin-config';
+}
+
+export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [services] = useState<Service[]>(brandConfig.services);
   const [loading, setLoading] = useState(true);
@@ -34,28 +38,7 @@ export const V4Dashboard: React.FC = () => {
   const [useAlmondOil, setUseAlmondOil] = useState(false);
   const [discount, setDiscount] = useState(0);
   const [hicapsFilter, setHicapsFilter] = useState<'all' | 'hicaps' | 'private'>('all');
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [passcode, setPasscode] = useState('');
-  const [passcodeError, setPasscodeError] = useState('');
-
-  useEffect(() => {
-    const authStatus = sessionStorage.getItem('admin_authorized');
-    if (authStatus === 'true') {
-      setIsAuthorized(true);
-    }
-  }, []);
-
-  const handlePasscodeSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passcode === '9999') {
-      setIsAuthorized(true);
-      sessionStorage.setItem('admin_authorized', 'true');
-      setPasscodeError('');
-    } else {
-      setPasscodeError('รหัสไม่ถูกต้อง กรุณาลองใหม่');
-      setPasscode('');
-    }
-  };
+  const [activeTab, setActiveTab] = useState<'bookings' | 'config'>(mode === 'admin-config' ? 'config' : 'bookings');
 
   const filteredBookings = bookings.filter(b => {
     if (hicapsFilter === 'hicaps') return b.serviceName.toLowerCase().includes('hicaps');
@@ -107,9 +90,7 @@ export const V4Dashboard: React.FC = () => {
   };
 
   const handleLogout = () => {
-    setIsAuthorized(false);
-    sessionStorage.removeItem('admin_authorized');
-    setPasscode('');
+    window.location.href = '/';
   };
 
   const totalRevenue = bookings
@@ -124,75 +105,24 @@ export const V4Dashboard: React.FC = () => {
 
   const pendingBookings = bookings.filter(b => b.paymentStatus !== 'fully-paid');
 
-  if (!isAuthorized) {
-    return (
-      <div className="min-h-screen bg-section flex items-center justify-center p-6 font-sans">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-white p-12 rounded-[3rem] shadow-2xl border border-beige/20 max-w-md w-full text-center space-y-8"
-        >
-          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
-            <Lock size={40} />
-          </div>
-          
-          <div>
-            <h2 className="text-3xl font-serif font-bold text-primary mb-2">Admin Access</h2>
-            <p className="text-earth/60">กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบจัดการ</p>
-          </div>
-
-          <form onSubmit={handlePasscodeSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <input 
-                type="password" 
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Enter Passcode"
-                className="w-full bg-section border-2 border-beige/20 rounded-2xl px-6 py-4 text-center text-2xl font-bold tracking-[1em] focus:border-primary outline-none transition-all text-primary placeholder:text-earth/20 placeholder:tracking-normal"
-                autoFocus
-              />
-              {passcodeError && (
-                <motion.p 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-rose-500 text-xs font-bold uppercase tracking-widest"
-                >
-                  {passcodeError}
-                </motion.p>
-              )}
-            </div>
-
-            <button 
-              type="submit"
-              className="w-full bg-primary text-white py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-sage transition-all shadow-xl shadow-primary/10 flex items-center justify-center gap-2"
-            >
-              <ShieldCheck size={20} />
-              Unlock Dashboard
-            </button>
-          </form>
-
-          <p className="text-[10px] text-earth/30 uppercase font-bold tracking-widest">
-            Mira Remedial Thai Massage • Security System
-          </p>
-        </motion.div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-section p-6 md:p-12 font-sans">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h1 className="text-4xl font-serif font-bold text-primary tracking-tight">V4 Dashboard</h1>
+            <h1 className="text-4xl font-serif font-bold text-primary tracking-tight">
+              {mode === 'staff-pos' ? 'Staff POS' : mode === 'admin-config' ? 'Admin Config' : 'Owner Dashboard'}
+            </h1>
             <p className="text-earth/50 font-medium">Mira Remedial Thai Massage Management</p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-beige/20">
-              <p className="text-[10px] font-bold text-earth/40 uppercase tracking-widest">Today's Revenue</p>
-              <p className="text-xl font-serif font-bold text-primary">${totalRevenue.toFixed(2)}</p>
-            </div>
+            {mode === 'owner-dashboard' && (
+              <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-beige/20">
+                <p className="text-[10px] font-bold text-earth/40 uppercase tracking-widest">Today's Revenue</p>
+                <p className="text-xl font-serif font-bold text-primary">${totalRevenue.toFixed(2)}</p>
+              </div>
+            )}
             <button 
               onClick={handleLogout}
               className="w-12 h-12 bg-white rounded-2xl shadow-sm border border-beige/20 flex items-center justify-center text-earth/40 hover:text-rose-500 transition-all"
@@ -203,112 +133,152 @@ export const V4Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard icon={<DollarSign size={24} />} label="Total Revenue" value={`$${totalRevenue.toFixed(0)}`} color="bg-primary" />
-          <StatCard 
-            icon={<CheckCircle2 size={24} />} 
-            label="HICAPS / Private" 
-            value={`$${hicapsRevenue.toFixed(0)} / $${privateRevenue.toFixed(0)}`} 
-            color="bg-blue-600" 
-          />
-          <StatCard icon={<Clock size={24} />} label="Pending Jobs" value={pendingBookings.length.toString()} color="bg-sage" />
-          <StatCard icon={<TrendingUp size={24} />} label="HICAPS Share" value={`${totalRevenue > 0 ? ((hicapsRevenue / totalRevenue) * 100).toFixed(1) : 0}%`} color="bg-green-500" />
-        </div>
+        {/* Stats Grid - Only for Owner */}
+        {mode === 'owner-dashboard' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <StatCard icon={<DollarSign size={24} />} label="Total Revenue" value={`$${totalRevenue.toFixed(0)}`} color="bg-primary" />
+            <StatCard 
+              icon={<CheckCircle2 size={24} />} 
+              label="HICAPS / Private" 
+              value={`$${hicapsRevenue.toFixed(0)} / $${privateRevenue.toFixed(0)}`} 
+              color="bg-blue-600" 
+            />
+            <StatCard icon={<Clock size={24} />} label="Pending Jobs" value={pendingBookings.length.toString()} color="bg-sage" />
+            <StatCard icon={<TrendingUp size={24} />} label="HICAPS Share" value={`${totalRevenue > 0 ? ((hicapsRevenue / totalRevenue) * 100).toFixed(1) : 0}%`} color="bg-green-500" />
+          </div>
+        )}
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Bookings List */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-serif font-bold text-primary">Recent Bookings</h2>
-              <div className="flex bg-white p-1 rounded-xl border border-beige/20">
-                {(['all', 'hicaps', 'private'] as const).map((f) => (
-                  <button
-                    key={f}
-                    onClick={() => setHicapsFilter(f)}
-                    className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${
-                      hicapsFilter === f ? 'bg-primary text-white shadow-sm' : 'text-earth/40 hover:text-primary'
-                    }`}
-                  >
-                    {f}
-                  </button>
-                ))}
+        {/* Admin Config Tabs */}
+        {mode === 'admin-config' && (
+          <div className="flex gap-4 border-b border-beige/20 pb-4">
+            <button 
+              onClick={() => setActiveTab('bookings')}
+              className={`px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'bookings' ? 'bg-primary text-white' : 'bg-white text-earth/40'}`}
+            >
+              Bookings
+            </button>
+            <button 
+              onClick={() => setActiveTab('config')}
+              className={`px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'config' ? 'bg-primary text-white' : 'bg-white text-earth/40'}`}
+            >
+              System Config
+            </button>
+          </div>
+        )}
+
+        {activeTab === 'bookings' ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {/* Bookings List */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-serif font-bold text-primary">Recent Bookings</h2>
+                <div className="flex bg-white p-1 rounded-xl border border-beige/20">
+                  {(['all', 'hicaps', 'private'] as const).map((f) => (
+                    <button
+                      key={f}
+                      onClick={() => setHicapsFilter(f)}
+                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${
+                        hicapsFilter === f ? 'bg-primary text-white shadow-sm' : 'text-earth/40 hover:text-primary'
+                      }`}
+                    >
+                      {f}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {filteredBookings.length === 0 ? (
+                  <div className="bg-white p-12 rounded-[3rem] text-center border border-dashed border-beige/40">
+                    <p className="text-earth/40 text-sm">No bookings found for this filter</p>
+                  </div>
+                ) : (
+                  filteredBookings.map((booking) => (
+                    <motion.div 
+                      key={booking.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`bg-white p-6 rounded-[2.5rem] shadow-sm border transition-all hover:shadow-md cursor-pointer ${
+                        booking.paymentStatus === 'fully-paid' ? 'border-green-100 opacity-80' : 'border-beige/20'
+                      }`}
+                      onClick={() => {
+                        setSelectedBooking(booking);
+                        setShowCompleteModal(true);
+                      }}
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
+                            booking.paymentStatus === 'fully-paid' ? 'bg-green-50 text-green-500' : 'bg-primary/5 text-primary'
+                          }`}>
+                            <Calendar size={20} />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-primary">{booking.clientName}</h4>
+                            <p className="text-xs text-earth/50">{booking.serviceName} • {booking.duration}m</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-serif font-bold text-primary">${(booking.totalAmount || booking.price).toFixed(2)}</p>
+                          <span className={`text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md ${
+                            booking.paymentStatus === 'fully-paid' ? 'bg-green-100 text-green-700' : 'bg-beige/30 text-earth/60'
+                          }`}>
+                            {booking.paymentStatus}
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
               </div>
             </div>
 
-            <div className="space-y-4">
-              {filteredBookings.length === 0 ? (
-                <div className="bg-white p-12 rounded-[3rem] text-center border border-dashed border-beige/40">
-                  <p className="text-earth/40 text-sm">No bookings found for this filter</p>
-                </div>
-              ) : (
-                filteredBookings.map((booking) => (
-                <motion.div 
-                  key={booking.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`bg-white p-6 rounded-[2.5rem] shadow-sm border transition-all hover:shadow-md cursor-pointer ${
-                    booking.paymentStatus === 'fully-paid' ? 'border-green-100 opacity-80' : 'border-beige/20'
-                  }`}
-                  onClick={() => {
-                    setSelectedBooking(booking);
-                    setShowCompleteModal(true);
-                  }}
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-                        booking.paymentStatus === 'fully-paid' ? 'bg-green-50 text-green-500' : 'bg-primary/5 text-primary'
-                      }`}>
-                        <Calendar size={20} />
+            {/* Service List Sidebar */}
+            <div className="space-y-6">
+              <h2 className="text-2xl font-serif font-bold text-primary">Service List</h2>
+              <div className="space-y-4">
+                {services.map((service) => (
+                  <div key={service.id} className="bg-white p-4 rounded-3xl border border-beige/20 flex items-center gap-4">
+                    <img src={service.image} alt={service.name} className="w-12 h-12 rounded-xl object-cover" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h5 className="text-xs font-bold text-primary truncate">{service.name}</h5>
+                        {service.category === 'Remedial' && (
+                          <span className="bg-blue-100 text-blue-700 text-[8px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
+                            <CheckCircle2 size={8} /> HICAPS
+                          </span>
+                        )}
                       </div>
-                      <div>
-                        <h4 className="font-bold text-primary">{booking.clientName}</h4>
-                        <p className="text-xs text-earth/50">{booking.serviceName} • {booking.duration}m</p>
-                      </div>
+                      <p className="text-[10px] text-earth/40 uppercase tracking-widest">{service.category || 'Standard'}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-serif font-bold text-primary">${(booking.totalAmount || booking.price).toFixed(2)}</p>
-                      <span className={`text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md ${
-                        booking.paymentStatus === 'fully-paid' ? 'bg-green-100 text-green-700' : 'bg-beige/30 text-earth/60'
-                      }`}>
-                        {booking.paymentStatus}
-                      </span>
+                      <p className="text-xs font-bold text-sage">${Math.min(...(Object.values(service.rates) as number[]))}+</p>
                     </div>
                   </div>
-                </motion.div>
-              ))
-            )}
-          </div>
-        </div>
-
-          {/* Service List Sidebar */}
-          <div className="space-y-6">
-            <h2 className="text-2xl font-serif font-bold text-primary">Service List</h2>
-            <div className="space-y-4">
-              {services.map((service) => (
-                <div key={service.id} className="bg-white p-4 rounded-3xl border border-beige/20 flex items-center gap-4">
-                  <img src={service.image} alt={service.name} className="w-12 h-12 rounded-xl object-cover" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h5 className="text-xs font-bold text-primary truncate">{service.name}</h5>
-                      {service.category === 'Remedial' && (
-                        <span className="bg-blue-100 text-blue-700 text-[8px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
-                          <CheckCircle2 size={8} /> HICAPS
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-[10px] text-earth/40 uppercase tracking-widest">{service.category || 'Standard'}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs font-bold text-sage">${Math.min(...(Object.values(service.rates) as number[]))}+</p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="bg-white p-12 rounded-[3rem] shadow-sm border border-beige/20 max-w-2xl mx-auto text-center space-y-8">
+            <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto text-secondary">
+              <ShieldCheck size={40} />
+            </div>
+            <h2 className="text-3xl font-serif font-bold text-primary">System Configuration</h2>
+            <p className="text-earth/60">Welcome, Admin Config (พี่แสน). This section is for system-wide settings.</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+              <div className="p-6 bg-section rounded-2xl border border-beige/20">
+                <h3 className="font-bold text-primary mb-2">Store Settings</h3>
+                <p className="text-xs text-earth/50">Edit store name, address, and contact info.</p>
+              </div>
+              <div className="p-6 bg-section rounded-2xl border border-beige/20">
+                <h3 className="font-bold text-primary mb-2">Service Management</h3>
+                <p className="text-xs text-earth/50">Add or remove services and adjust pricing.</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Complete Job Modal */}
