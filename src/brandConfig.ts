@@ -5,6 +5,7 @@ export const brandConfig = {
   description: "Traditional Thai healing meets modern clinical precision. Experience the art of massage in a sanctuary designed for your recovery.",
   location: "Level 1/76 Pier Street, Altona 3018",
   phone: "0466992456",
+  bookingUrl: "https://mira.book.receptionerapp.com/",
   email: "miraremedial@gmail.com",
   logo: "https://firebasestorage.googleapis.com/v0/b/studio-6368441530-fca54.firebasestorage.app/o/chapter99%20studio%2FMira%20Thai%20Massage%2Flogo%20Mira%2FLogo%20-%20MIRA-02.jpg?alt=media&token=d907378d-34fa-4c09-be94-07f039855304",
   heroImage: "https://firebasestorage.googleapis.com/v0/b/studio-6368441530-fca54.firebasestorage.app/o/chapter99%20studio%2FMira%20Thai%20Massage%2F002.png?alt=media&token=f90793ff-d7a1-4b24-8d7e-db8687c1f848",

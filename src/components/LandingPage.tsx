@@ -15,11 +15,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
   const [activeCategory, setActiveCategory] = useState<'All' | 'Standard' | 'Remedial'>('All');
 
   const handleBookNow = () => {
-    setIsUpsellOpen(true);
+    window.open(brandConfig.bookingUrl, '_blank');
   };
 
   const confirmBooking = () => {
-    window.location.href = `tel:${brandConfig.phone}`;
+    window.open(brandConfig.bookingUrl, '_blank');
     setIsUpsellOpen(false);
   };
 
@@ -73,10 +73,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
           </p>
           <div className="mt-10 flex flex-col md:flex-row items-center justify-center gap-4">
             <a 
-              href={`tel:${brandConfig.phone.replace(/\s+/g, '')}`}
+              href={brandConfig.bookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-full md:w-auto bg-primary text-white px-10 py-5 rounded-full text-sm font-bold uppercase tracking-[0.2em] hover:bg-sage transition-all shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 flex items-center justify-center"
             >
-              Book Your Session / โทรจองคิว
+              Book Your Session / จองที่นี่
             </a>
             <a href="#services" className="text-primary font-bold uppercase tracking-widest text-xs hover:underline underline-offset-8 px-6 py-4">
               Explore Services
@@ -188,7 +190,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                     <div className="space-y-2">
                       <h4 className="text-lg font-serif font-bold text-primary leading-tight">{service.name}</h4>
                       <p className="text-xs text-earth/50 font-medium uppercase tracking-widest">${service.fullPrice} • {service.duration}M</p>
-                      <button className="text-[10px] font-bold text-sage uppercase tracking-widest border-b border-sage/30 pb-1">Book Now</button>
+                      <button className="text-[10px] font-bold text-sage uppercase tracking-widest border-b border-sage/30 pb-1">Book Your Session / จองที่นี่</button>
                     </div>
                   </motion.div>
                 ))}
@@ -268,7 +270,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                   </div>
 
                   <button className="w-full bg-primary text-white py-4 rounded-2xl text-xs font-bold uppercase tracking-[0.2em] shadow-lg shadow-primary/20 group-hover:bg-sage transition-all">
-                    Book Appointment
+                    Book Your Session / จองที่นี่
                   </button>
                 </div>
               </motion.div>
@@ -448,10 +450,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
               </div>
               
               <a 
-                href={`tel:${brandConfig.phone.replace(/\s+/g, '')}`}
+                href={brandConfig.bookingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-full bg-secondary text-white py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-white hover:text-primary transition-all shadow-xl shadow-secondary/10 flex items-center justify-center text-sm"
               >
-                Book Your Session / โทรจองคิว
+                Book Your Session / จองที่นี่
               </a>
             </div>
           </div>
