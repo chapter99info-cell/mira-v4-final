@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+      body { padding: 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f8f9fa; }
+      .container { max-width: 500px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+      .mode-btn { padding: 15px; font-size: 1.2rem; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Hidden Logo -->
+      <div id="logo" class="text-center my-3" style="cursor: pointer; font-size: 1.5rem; font-weight: bold;">
+        Mira Massage
+      </div>
+      <p class="text-center text-muted" style="font-size: 0.7rem;">Long press logo for staff mode</p>
+
+      <!-- Screens -->
+      <div id="customerScreen">
+        <h4>Enter Information</h4>
+        <input type="text" id="custName" class="form-control mb-2" placeholder="Full Name">
+        <input type="email" id="custEmail" class="form-control mb-3" placeholder="Email">
+        <button class="btn btn-success w-100" onclick="saveAsPending()">Submit Information</button>
+      </div>
+
+      <!-- Add Provider Screen -->
+      <div id="addProviderScreen" style="display:none;" class="p-3 bg-white shadow rounded">
+        <h4 class="mb-4 text-center">Add New Therapist</h4>
+        <input type="text" id="addName" class="form-control form-control-lg mb-3" placeholder="Full Name">
+        <input type="text" id="addPNo" class="form-control form-control-lg mb-3" placeholder="Provider Number">
+        <input type="password" id="addPin" class="form-control form-control-lg mb-3" placeholder="PIN (4 digits)" maxlength="4" pattern="\d{4}">
+        <button class="btn btn-success btn-lg w-100 mb-2" onclick="submitAddProvider()">Save Provider</button>
+        <button class="btn btn-outline-secondary w-100" onclick="backToDashboard()">Cancel</button>
+      </div>
+
+      <div id="pinScreen" style="display:none;">
+        <h4>Staff PIN</h4>
+        <input type="password" id="pinInput" class="form-control mb-3" maxlength="4" pattern="\d{4}" placeholder="****">
+        <button class="btn btn-primary w-100" onclick="checkPin()">Login</button>
+      </div>
+
+      <!-- Staff Content -->
+      <div id="staffContent" style="display:none;">
+        <form id="receiptForm" onsubmit="event.preventDefault(); submitForm();">
+          <label>Load Pending Request</label>
+          <select id="pendingSelect" class="form-select mb-3" onchange="loadPending()">
+            <option value="">Select a request...</option>
+          </select>
+          <input type="text" name="clientName" id="clientName" class="form-control mb-2" placeholder="Client Name" required>
+          <input type="email" name="clientEmail" id="clientEmail" class="form-control mb-2" placeholder="Client Email" required>
+          <input type="number" name="amount" id="amount" class="form-control mb-3" placeholder="Amount ($)" required>
+          <button type="submit" class="btn btn-success w-100">Issue Receipt</button>
+        </form>
+        <button class="btn btn-secondary w-100 mt-2" onclick="syncOfflineData()">Sync Offline Data</button>
+        <div id="adminPanel" class="mt-4" style="display:none;">
+           <hr>
+           <h4 class="text-center" style="color: #4A5D23;">Super Admin Dashboard</h4>
+           <div class="row g-2">
+             <div class="col-6"><button class="btn btn-outline-success p-3 w-100" onclick="showAddProviderModal()">➕ Add Staff</button></div>
+             <div class="col-6"><button class="btn btn-outline-info p-3 w-100" onclick="showAdminSettings()">📋 Manage Staff</button></div>
+             <div class="col-6"><button class="btn btn-outline-warning p-3 w-100" onclick="showAdminData()">📊 View Logs</button></div>
+             <div class="col-6"><button class="btn btn-outline-dark p-3 w-100" onclick="syncOfflineData()">🔄 Sync Data</button></div>
+           </div>
+           <div id="adminData" class="mt-2"></div>
+        </div>
+      </div>
+      
+      <!-- Admin Settings Screen -->
+      <div id="adminSettingsScreen" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 style="color: #C5A059;">Manage Staff</h4>
+            <button class="btn btn-sm btn-link" onclick="backToDashboard()">Back</button>
+        </div>
+        <div id="providersList"></div>
+      </div>
+
+      <div id="status" class="mt-3 text-center"></div>
+      <button class="btn btn-link mt-3 w-100" onclick="location.reload()">Back to Start</button>
+    </div>
+
+    <script>
+        function backToDashboard() {
+            document.getElementById('adminSettingsScreen').style.display = 'none';
+            document.getElementById('staffContent').style.display = 'block';
+        }
+        function showAddProviderModal() {
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('addProviderScreen').style.display = 'block';
+        }
+
+        function submitAddProvider() {
+            const data = {
+                name: document.getElementById('addName').value,
+                providerNo: document.getElementById('addPNo').value,
+                pin: document.getElementById('addPin').value
+            };
+            if(!data.name || !data.providerNo || !data.pin || data.pin.length !== 4) {
+                alert("Please fill all fields correctly. PIN must be 4 digits.");
+                return;
+            }
+            google.script.run.withSuccessHandler(() => {
+                alert("Success! New Therapist Added");
+                // Clear form and go back
+                document.getElementById('addName').value = '';
+                document.getElementById('addPNo').value = '';
+                document.getElementById('addPin').value = '';
+                backToDashboard();
+                if(document.getElementById('adminSettingsScreen').style.display === 'block') showAdminSettings();
+            }).addProvider(data);
+        }
+        function showAdminData() {
+            google.script.run.withSuccessHandler(function(data) {
+                let html = '<table class="table table-sm"><tr><th>Date</th><th>Receipt</th><th>Client</th><th>Amount</th></tr>';
+                data.forEach(r => {
+                    html += `<tr><td>${r[4]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[6]}</td></tr>`;
+                });
+                html += '</table>';
+                document.getElementById('adminData').innerHTML = html;
+            }).getReceiptHistory();
+        }
+      let authenticatedStaff = null;
+      let timer;
+      const logo = document.getElementById('logo');
+
+      // Logo long press for staff mode
+      logo.addEventListener('mousedown', startPress);
+      logo.addEventListener('mouseup', endPress);
+      logo.addEventListener('touchstart', startPress);
+      logo.addEventListener('touchend', endPress);
+
+      function startPress() { timer = setTimeout(() => { document.getElementById('customerScreen').style.display='none'; document.getElementById('pinScreen').style.display='block'; }, 1000); }
+      function endPress() { clearTimeout(timer); }
+
+      function saveAsPending() {
+        const data = {
+          clientName: document.getElementById('custName').value,
+          clientEmail: document.getElementById('custEmail').value
+        };
+        google.script.run.withSuccessHandler(() => alert("Submitted!")).savePendingRequest(data);
+      }
+
+      function checkPin() {
+        const pin = document.getElementById('pinInput').value;
+        google.script.run.withSuccessHandler(function(provider) {
+          if (provider) {
+            authenticatedStaff = provider;
+            document.getElementById('pinScreen').style.display = 'none';
+            
+            // Show Staff Content, show Admin button if manager/admin
+            document.getElementById('staffContent').style.display = 'block';
+            if (['Manager', 'Super Admin'].includes(provider.role)) {
+                document.getElementById('adminPanel').style.display = 'block';
+            }
+            loadPendingList();
+
+          } else { alert("Invalid PIN."); }
+        }).verifyPin(pin);
+      }
+
+      function loadPendingList() {
+        google.script.run.withSuccessHandler(function(data) {
+          const select = document.getElementById('pendingSelect');
+          data.forEach(p => {
+            select.innerHTML += `<option value='${JSON.stringify(p)}'>${p.name} - ${p.email}</option>`;
+          });
+        }).getPendingRequests();
+      }
+
+      function loadPending() {
+        const val = document.getElementById('pendingSelect').value;
+        if(!val) return;
+        const data = JSON.parse(val);
+        document.getElementById('clientName').value = data.name;
+        document.getElementById('clientEmail').value = data.email;
+      }
+
+      function submitForm() {
+        const data = {
+          clientName: document.getElementById('clientName').value,
+          clientEmail: document.getElementById('clientEmail').value,
+          amount: document.getElementById('amount').value,
+          therapist: authenticatedStaff.name,
+          pin: document.getElementById('pinInput').value
+        };
+
+        if (navigator.onLine) {
+          google.script.run.withSuccessHandler(() => {
+            document.getElementById('status').innerText = "Receipt Issued!";
+            document.getElementById('receiptForm').reset();
+          }).processReceipt(data);
+        } else {
+          const offlineReceipts = JSON.parse(localStorage.getItem('offlineReceipts') || '[]');
+          offlineReceipts.push(data);
+          localStorage.setItem('offlineReceipts', JSON.stringify(offlineReceipts));
+          alert("Saved offline. Sync later.");
+        }
+      }
+
+      function syncOfflineData() {
+        const offlineReceipts = JSON.parse(localStorage.getItem('offlineReceipts') || '[]');
+        if (offlineReceipts.length === 0) { alert("No data to sync."); return; }
+        google.script.run.withSuccessHandler(() => { alert("Sync complete!"); localStorage.removeItem('offlineReceipts'); }).syncOfflineData(offlineReceipts);
+      }
+
+      function showAdminSettings() {
+        document.getElementById('staffContent').style.display = 'none';
+        document.getElementById('adminSettingsScreen').style.display = 'block';
+        google.script.run.withSuccessHandler(function(providers) {
+          let html = '<table class="table"><tr><th>Name</th><th>PIN</th><th>Action</th></tr>';
+          providers.forEach(p => {
+             html += `<tr><td>${p[0]}</td><td><input type="text" id="pin_${p[0]}" value="${p[4]}"></td><td><button class="btn btn-sm btn-success" onclick="updateProvider('${p[0]}')">Save</button></td></tr>`;
+          });
+          html += '</table>';
+          document.getElementById('providersList').innerHTML = html;
+        }).getProvidersAdmin();
+      }
+
+      function updateProvider(name) {
+        const pin = document.getElementById('pin_'+name).value;
+        google.script.run.withSuccessHandler(() => alert("Updated!")).updateProvider(name, "", "", pin);
+      }
+
+    </script>
+  </body>
+</html>

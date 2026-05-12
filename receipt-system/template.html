@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; line-height: 1.6; }
+      .receipt { max-width: 600px; margin: auto; padding: 40px; border: 1px solid #eee; }
+      .header { text-align: center; margin-bottom: 30px; }
+      .logo { font-size: 2em; font-weight: bold; color: #2C3E50; }
+      .shop-info { text-align: center; font-size: 0.9em; color: #777; }
+      .title { font-size: 1.8em; font-weight: bold; text-align: center; margin: 30px 0; letter-spacing: 2px; }
+      .details { display: flex; justify-content: space-between; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px;}
+      table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+      th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+      .total { text-align: right; font-weight: bold; font-size: 1.3em; margin-top: 20px; }
+      .provider-info { border-top: 2px solid #333; padding-top: 20px; margin-top: 40px; }
+      .signature { margin-top: 20px; width: 150px; display: block; }
+      
+      @media print {
+        body { -webkit-print-color-adjust: exact; }
+        .receipt { border: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="receipt">
+      <div class="header">
+        <div class="logo">Mira Remedial Thai Massage</div>
+        <div class="shop-info">
+          Level 1/76 Pier St, Altona VIC 3018<br>
+          ABN: 69695654034
+        </div>
+      </div>
+      <div class="title">RECEIPT</div>
+      <div class="details">
+        <div><strong>To:</strong> {{Client_Name}}</div>
+        <div>
+          <strong>Receipt #:</strong> {{Receipt_No}}<br>
+          <strong>Date:</strong> {{Date}}
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Description</th><th>Amount</th></tr></thead>
+        <tbody>
+          <tr><td>Remedial Massage Treatment (60 mins)</td><td>${{Amount}}</td></tr>
+        </tbody>
+      </table>
+      <div class="total">Total Paid: ${{Amount}}</div>
+      <div class="provider-info">
+        <p><strong>Provider Details:</strong></p>
+        <p>{{Therapist_Name}}<br>
+        Provider #: {{Provider_No}}<br>
+        ABN: {{ABN}}</p>
+        <img class="signature" src="{{Signature_URL}}" alt="Signature">
+      </div>
+    </div>
+  </body>
+</html>
