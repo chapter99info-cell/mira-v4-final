@@ -33,7 +33,7 @@ export const StaffEntryForm: React.FC<StaffEntryFormProps> = ({ staffName, provi
     try {
       // NOTE: Using no-cors mode to bypass CORS issues, 
       // but note that the response body cannot be read in this mode.
-      await fetch('https://script.google.com/macros/s/AKfycbx7eJ8avfMbq7Mvsuvkw1AgI3OqdAjtD-WDxuuywJur5KF52PLwdu4JSC1tgVFDOLWX/exec', {
+      await fetch('https://script.google.com/macros/s/AKfycbwKcZg2W35neiGGISxS4zac3VJr67XR48VCvicPjVmO8H8oKhLNG9bYfP9caeE7-cQF/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
