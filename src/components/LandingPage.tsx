@@ -16,7 +16,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<'All' | 'Standard' | 'Remedial'>('All');
   const [showLogin, setShowLogin] = useState(false);
-  const [auth, setAuth] = useState<null | {role: string, name: string}>(null);
+  const [auth, setAuth] = useState<null | {role: string, name: string, pin: string}>(null);
 
   const handleBookNow = () => {
     window.open(brandConfig.bookingUrl, '_blank');
@@ -510,10 +510,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                 const pin = e.target.value;
                 if (pin.length === 4) {
                   if (pin === '3501') {
-                    setAuth({ role: 'SuperAdmin', name: 'P\'Saen' });
+                    setAuth({ role: 'SuperAdmin', name: 'P\'Saen', pin });
                     setShowLogin(false);
                   } else {
-                    setAuth({ role: 'Staff', name: 'Staff' });
+                    setAuth({ role: 'Staff', name: 'Staff', pin });
                     setShowLogin(false);
                   }
                   e.target.value = '';
@@ -535,7 +535,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
       {auth?.role === 'Staff' && (
         <div className="fixed inset-0 z-50 bg-white p-4">
           <button className="p-4 mb-4" onClick={() => setAuth(null)}>Close</button>
-          <StaffEntryForm staffName={auth.name} providerNumber="000" onReceiptIssued={() => setAuth(null)} />
+          <StaffEntryForm staffName={auth.name} providerNumber="000" onReceiptIssued={() => setAuth(null)} pin={auth.pin} />
         </div>
       )}
     </div>

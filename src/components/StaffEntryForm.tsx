@@ -4,9 +4,10 @@ interface StaffEntryFormProps {
   staffName: string;
   providerNumber: string;
   onReceiptIssued: () => void;
+  pin: string;
 }
 
-export const StaffEntryForm: React.FC<StaffEntryFormProps> = ({ staffName, providerNumber, onReceiptIssued }) => {
+export const StaffEntryForm: React.FC<StaffEntryFormProps> = ({ staffName, providerNumber, onReceiptIssued, pin }) => {
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [amount, setAmount] = useState('');
@@ -14,15 +15,37 @@ export const StaffEntryForm: React.FC<StaffEntryFormProps> = ({ staffName, provi
 
   const services = ['Remedial Massage', 'Relaxation', 'Deep Tissue', 'Thai Massage'];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSending, setIsSending] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate receipt generation
-    console.log('Issuing receipt for:', { customerName, customerEmail, amount, service, staffName, providerNumber });
-    alert('PDF Receipt Issued Successfully!');
-    setCustomerName('');
-    setCustomerEmail('');
-    setAmount('');
-    onReceiptIssued();
+    setIsSending(true);
+    
+    const payload = { 
+      clientName: customerName, 
+      clientEmail: customerEmail, 
+      service: service
+    };
+    
+    try {
+      await fetch('https://script.google.com/macros/s/AKfycbz2CUdWJSsx3fwPJ7k6L-tO9TfhABDplqBqCSIcx6qClZVliAXXUwpqt3MJzDTY2gr_/exec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      
+      alert('Success! Receipt Sent Successfully!');
+      setCustomerName('');
+      setCustomerEmail('');
+      setAmount('');
+      onReceiptIssued();
+    } catch (err) {
+      alert('Error: ' + err);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -71,9 +94,10 @@ export const StaffEntryForm: React.FC<StaffEntryFormProps> = ({ staffName, provi
         </div>
         <button 
           type="submit" 
-          className="w-full py-6 mt-4 bg-[#4A5D23] text-white text-xl font-bold rounded-2xl hover:bg-[#3d4d1d] transition-colors"
+          disabled={isSending}
+          className="w-full py-6 mt-4 bg-[#4A5D23] text-white text-xl font-bold rounded-2xl hover:bg-[#3d4d1d] transition-colors disabled:opacity-50"
         >
-          Issue PDF Receipt
+          {isSending ? 'Generating PDF...' : 'Issue PDF Receipt'}
         </button>
       </form>
     </div>

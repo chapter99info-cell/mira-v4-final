@@ -83,8 +83,8 @@ function processReceipt(formData) {
   const receiptSheet = ss.getSheetByName('Receipts');
   
   // Verify Provider
-  const provider = checkPin(formData.pin);
-  if (!provider) {
+  const provider = verifyPin(formData.pin);
+  if (!provider || provider.role === 'Unauthorized') {
     throw new Error('รหัส PIN ไม่ถูกต้อง!');
   }
 
@@ -100,26 +100,34 @@ function processReceipt(formData) {
   template.Receipt_No = receiptNo;
   template.Date = timestamp.toLocaleDateString();
   template.Amount = formData.amount;
-  template.Therapist_Name = provider.name;
-  template.Provider_No = provider.pNo;
-  template.ABN = provider.abn;
+  template.Therapist_Name = provider.name === "P'Saen" ? "Monsicha Chayakornkrajohnkul" : provider.name;
+  template.Provider_No = provider.pNo || "A348132F";
+  template.ABN = provider.abn || "69695654034";
   template.Signature_URL = provider.sigUrl;
   
   const htmlContent = template.evaluate().getContent();
-  // Generate PDF
-  const pdf = Utilities.newBlob(htmlContent, 'text/html').getAs('application/pdf')
+  
+  // Generate PDF (Using temporary Doc approach for reliability)
+  var doc = DocumentApp.create('Receipt_' + receiptNo);
+  doc.getBody().appendHtml(htmlContent);
+  doc.saveAndClose();
+  const pdf = DriveApp.getFileById(doc.getId()).getAs('application/pdf')
     .setName(`${receiptNo}_${formData.clientName}.pdf`);
   
   // Save to Drive
   const folder = DriveApp.getFolderById(FOLDER_ID);
   const file = folder.createFile(pdf);
   
+  // Clean up temp doc
+  DriveApp.getFileById(doc.getId()).setTrashed(true);
+  
   // Send Email
   MailApp.sendEmail({
     to: formData.clientEmail,
-    subject: `Receipt: ${receiptNo} - Mira Remedial Thai Massage`,
-    body: 'Please find attached your receipt.',
-    attachments: [file]
+    subject: `Your Health Fund Receipt from Mira Thai Massage`,
+    body: `Hi ${formData.clientName},\n\nThank you for visiting Mira Remedial Thai Massage. Please find your receipt attached.`,
+    attachments: [file],
+    name: "Mira Remedial Thai Massage"
   });
 
   // Log to Sheet
