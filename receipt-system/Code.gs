@@ -145,3 +145,23 @@ function syncOfflineData(dataArray) {
     }
   });
 }
+
+// พนักงานเปิดประตู รับข้อมูลจากแอป V4
+function doPost(e) {
+  try {
+    // 1. แกะกล่องข้อมูลที่หน้าเว็บส่งมาให้
+    const data = JSON.parse(e.postData.contents);
+    
+    // 2. ส่งข้อมูลไปให้ฟังก์ชันหลัก (processReceipt) ทำงานต่อ
+    const result = processReceipt(data);
+    
+    // 3. ตะโกนบอกหน้าเว็บกลับไปว่า "ส่งใบเสร็จเรียบร้อยแล้วจ้า!"
+    return ContentService.createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    // ถ้าพัง ให้ฟ้องกลับไปที่หน้าเว็บ
+    return ContentService.createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}

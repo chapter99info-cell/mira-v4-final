@@ -16,19 +16,22 @@ export const StaffEntryForm: React.FC<StaffEntryFormProps> = ({ staffName, provi
   const services = ['Remedial Massage', 'Relaxation', 'Deep Tissue', 'Thai Massage'];
 
   const [isSending, setIsSending] = useState(false);
+  const [message, setMessage] = useState<{ text: string, type: 'success' | 'error' } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSending(true);
+    setMessage(null);
     
     const payload = { 
       clientName: customerName, 
       clientEmail: customerEmail, 
-      service: service
+      service: service,
+      amount: amount
     };
     
     try {
-      await fetch('https://script.google.com/macros/s/AKfycbz2CUdWJSsx3fwPJ7k6L-tO9TfhABDplqBqCSIcx6qClZVliAXXUwpqt3MJzDTY2gr_/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbx7eJ8avfMbq7Mvsuvkw1AgI3OqdAjtD-WDxuuywJur5KF52PLwdu4JSC1tgVFDOLWX/exec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,13 +39,18 @@ export const StaffEntryForm: React.FC<StaffEntryFormProps> = ({ staffName, provi
         body: JSON.stringify(payload),
       });
       
-      alert('Success! Receipt Sent Successfully!');
+      if (!response.ok) throw new Error('Failed to send receipt.');
+
+      setMessage({ text: 'Receipt Sent Successfully!', type: 'success' });
       setCustomerName('');
       setCustomerEmail('');
       setAmount('');
-      onReceiptIssued();
+      setTimeout(() => {
+          setMessage(null);
+          onReceiptIssued();
+      }, 2000);
     } catch (err) {
-      alert('Error: ' + err);
+      setMessage({ text: 'Error: ' + err, type: 'error' });
     } finally {
       setIsSending(false);
     }
@@ -99,6 +107,11 @@ export const StaffEntryForm: React.FC<StaffEntryFormProps> = ({ staffName, provi
         >
           {isSending ? 'Generating PDF...' : 'Issue PDF Receipt'}
         </button>
+        {message && (
+          <div className={`mt-4 p-4 rounded-xl text-center font-bold ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+            {message.text}
+          </div>
+        )}
       </form>
     </div>
   );
