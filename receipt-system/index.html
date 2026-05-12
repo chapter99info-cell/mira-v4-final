@@ -7,16 +7,29 @@
       body { padding: 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f8f9fa; }
       .container { max-width: 500px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
       .mode-btn { padding: 15px; font-size: 1.2rem; }
+      /* Modal Styles */
+      .modal-fullscreen {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px);
+        z-index: 1000; display: none; align-items: center; justify-content: center;
+      }
+      .modal-content {
+        background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        max-width: 400px; width: 90%; text-align: center;
+      }
+      .keypad-btn { font-size: 2rem !important; padding: 25px !important; }
+      /* Shake Animation */
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        50% { transform: translateX(10px); }
+        75% { transform: translateX(-10px); }
+      }
+      .shake { animation: shake 0.3s; }
     </style>
   </head>
   <body>
     <div class="container">
-      <!-- Hidden Logo -->
-      <div id="logo" class="text-center my-3" style="cursor: pointer; font-size: 1.5rem; font-weight: bold;">
-        Mira Massage
-      </div>
-      <p class="text-center text-muted" style="font-size: 0.7rem;">Long press logo for staff mode</p>
-
       <!-- Screens -->
       <div id="customerScreen">
         <h4>Enter Information</h4>
@@ -36,29 +49,31 @@
       </div>
 
       <!-- Keypad Screen -->
-      <div id="pinScreen" style="display:none;" class="text-center">
-        <h4>Enter PIN</h4>
-        <div id="pinDisplay" class="display-4 border rounded mb-3 p-2 bg-light">____</div>
-        <div class="d-grid gap-2">
-            <div class="row g-2">
-                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('1')">1</button>
-                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('2')">2</button>
-                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('3')">3</button>
-            </div>
-            <div class="row g-2">
-                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('4')">4</button>
-                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('5')">5</button>
-                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('6')">6</button>
-            </div>
-            <div class="row g-2">
-                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('7')">7</button>
-                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('8')">8</button>
-                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('9')">9</button>
-            </div>
-            <div class="row g-2">
-                <button class="btn btn-outline-dark p-3 col-4" onclick="clearPin()">C</button>
-                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('0')">0</button>
-                <button class="btn btn-success p-3 col-4" onclick="checkPin()">OK</button>
+      <div id="pinScreen" class="modal-fullscreen">
+        <div class="modal-content" id="pinModalContent">
+            <h4>Enter PIN</h4>
+            <div id="pinDisplay" class="mb-4 h2">○ ○ ○ ○</div>
+            <div class="d-grid gap-2">
+                <div class="row g-2">
+                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('1')">1</button>
+                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('2')">2</button>
+                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('3')">3</button>
+                </div>
+                <div class="row g-2">
+                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('4')">4</button>
+                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('5')">5</button>
+                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('6')">6</button>
+                </div>
+                <div class="row g-2">
+                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('7')">7</button>
+                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('8')">8</button>
+                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('9')">9</button>
+                </div>
+                <div class="row g-2">
+                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="clearPin()">C</button>
+                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('0')">0</button>
+                    <button class="btn btn-success keypad-btn col-4" onclick="checkPin()">OK</button>
+                </div>
             </div>
         </div>
       </div>
@@ -100,9 +115,16 @@
 
       <div id="status" class="mt-3 text-center"></div>
       <button class="btn btn-link mt-3 w-100" onclick="location.reload()">Back to Start</button>
+      <div class="footer-text">
+        &copy; 2026 Mira Thai Massage Altona. All rights reserved. 
+        <span class="secret-btn" onclick="openLoginPad()">🔒</span>
+      </div>
     </div>
-
-    <script>
+    <style>
+      .footer-text { text-align: center; color: #999; font-size: 0.8rem; margin-top: 40px; }
+      .secret-btn { cursor: pointer; opacity: 0.3; transition: 0.2s; }
+      .secret-btn:hover { opacity: 1; }
+    </style>
         function backToDashboard() {
             document.getElementById('adminSettingsScreen').style.display = 'none';
             document.getElementById('staffContent').style.display = 'block';
@@ -144,28 +166,33 @@
         }
       let currentPin = '';
       let timer;
-      const logo = document.getElementById('logo');
 
-      // Logo long press for staff mode (3s)
-      logo.addEventListener('mousedown', startPress);
-      logo.addEventListener('mouseup', endPress);
-      logo.addEventListener('touchstart', startPress);
-      logo.addEventListener('touchend', endPress);
-
-      function startPress() { timer = setTimeout(() => { document.getElementById('customerScreen').style.display='none'; document.getElementById('pinScreen').style.display='block'; }, 3000); }
-      function endPress() { clearTimeout(timer); }
+        function openLoginPad() {
+            document.getElementById('pinScreen').style.display='flex';
+        }
 
       function addPin(digit) {
-        if (currentPin.length < 4) currentPin += digit;
-        document.getElementById('pinDisplay').innerText = "*".repeat(currentPin.length) + "_".repeat(4 - currentPin.length);
+        if (currentPin.length < 4) {
+            currentPin += digit;
+            updateDots();
+        }
       }
-      function clearPin() { currentPin = ''; document.getElementById('pinDisplay').innerText = "____"; }
+      function clearPin() { currentPin = ''; updateDots(); }
+      
+      function updateDots() {
+          let dots = "";
+          for(let i=0; i<4; i++) {
+              dots += (i < currentPin.length) ? "● " : "○ ";
+          }
+          document.getElementById('pinDisplay').innerText = dots;
+      }
 
       function checkPin() {
         google.script.run.withSuccessHandler(function(provider) {
           if (provider && provider.role !== "Unauthorized") {
             authenticatedStaff = provider;
             document.getElementById('pinScreen').style.display = 'none';
+            clearPin();
             
             if (provider.role === 'SuperAdmin') {
                 document.getElementById('adminPanel').style.display = 'block';
@@ -179,7 +206,13 @@
                 }
             }
             loadPendingList();
-          } else { alert("Invalid PIN."); clearPin(); }
+          } else { 
+            // Shake effect
+            const modal = document.getElementById('pinModalContent');
+            modal.classList.add('shake');
+            setTimeout(() => modal.classList.remove('shake'), 300);
+            clearPin(); 
+          }
         }).verifyPin(currentPin);
       }
 

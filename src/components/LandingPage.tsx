@@ -5,6 +5,8 @@ import { Clock, DollarSign, ChevronRight, MapPin, Phone, Instagram, Facebook, Sp
 import { Service } from '../types';
 import { CustomerReviews } from './CustomerReviews';
 import { UpsellModal } from './UpsellModal';
+import { V4Dashboard } from './V4Dashboard';
+import { StaffEntryForm } from './StaffEntryForm';
 
 interface LandingPageProps {
   onBookNow: (service?: Service, withCoconut?: boolean, duration?: number) => void;
@@ -13,6 +15,8 @@ interface LandingPageProps {
 export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<'All' | 'Standard' | 'Remedial'>('All');
+  const [showLogin, setShowLogin] = useState(false);
+  const [auth, setAuth] = useState<null | {role: string, name: string}>(null);
 
   const handleBookNow = () => {
     window.open(brandConfig.bookingUrl, '_blank');
@@ -476,6 +480,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
             <p className="text-white/40 text-[10px] uppercase tracking-[0.3em]">
               © 2026 {brandConfig.name}. All Rights Reserved.
             </p>
+            <span 
+              onClick={() => setShowLogin(true)} 
+              style={{ cursor: 'pointer', opacity: 0.2 }}
+            >
+              🔒
+            </span>
           </div>
         </div>
       </footer>
@@ -485,6 +495,49 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
         onClose={() => setIsUpsellOpen(false)} 
         onConfirm={confirmBooking} 
       />
+
+      {/* Secret Login Modal */}
+      {showLogin && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full">
+            <h3 className="text-xl font-bold mb-6 text-center">Staff Login</h3>
+            <input 
+              type="password" 
+              maxLength={4}
+              placeholder="Enter PIN"
+              className="w-full text-center text-3xl p-4 mb-6 border rounded-2xl"
+              onChange={(e) => {
+                const pin = e.target.value;
+                if (pin.length === 4) {
+                  if (pin === '3501') {
+                    setAuth({ role: 'SuperAdmin', name: 'P\'Saen' });
+                    setShowLogin(false);
+                  } else {
+                    setAuth({ role: 'Staff', name: 'Staff' });
+                    setShowLogin(false);
+                  }
+                  e.target.value = '';
+                }
+              }}
+            />
+            <button onClick={() => setShowLogin(false)} className="w-full text-sm text-gray-500">Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {/* Navigation based on Auth */}
+      {auth?.role === 'SuperAdmin' && (
+        <div className="fixed inset-0 z-50 bg-white">
+          <button className="p-4" onClick={() => setAuth(null)}>Close</button>
+          <V4Dashboard />
+        </div>
+      )}
+      {auth?.role === 'Staff' && (
+        <div className="fixed inset-0 z-50 bg-white p-4">
+          <button className="p-4 mb-4" onClick={() => setAuth(null)}>Close</button>
+          <StaffEntryForm staffName={auth.name} providerNumber="000" onReceiptIssued={() => setAuth(null)} />
+        </div>
+      )}
     </div>
   );
 };

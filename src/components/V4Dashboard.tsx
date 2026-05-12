@@ -72,7 +72,7 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
       await updateDoc(doc(db, path, selectedBooking.id), {
         status: 'confirmed',
         paymentStatus: 'fully-paid',
-        useAlmondOil: useAlmondOil || selectedBooking.useAlmondOil,
+        useAlmondOil: !!(useAlmondOil || selectedBooking.useAlmondOil),
         discount: discount,
         totalAmount: finalPrice,
         completedAt: new Date().toISOString()
