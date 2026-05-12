@@ -24,24 +24,25 @@ export const StaffEntryForm: React.FC<StaffEntryFormProps> = ({ staffName, provi
     setMessage(null);
     
     const payload = { 
-      clientName: customerName, 
-      clientEmail: customerEmail, 
-      service: service,
-      amount: amount
+      customerName, 
+      customerEmail,
+      serviceType: service,
+      amount
     };
     
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbx7eJ8avfMbq7Mvsuvkw1AgI3OqdAjtD-WDxuuywJur5KF52PLwdu4JSC1tgVFDOLWX/exec', {
+      // NOTE: Using no-cors mode to bypass CORS issues, 
+      // but note that the response body cannot be read in this mode.
+      await fetch('https://script.google.com/macros/s/AKfycbx7eJ8avfMbq7Mvsuvkw1AgI3OqdAjtD-WDxuuywJur5KF52PLwdu4JSC1tgVFDOLWX/exec', {
         method: 'POST',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
       });
       
-      if (!response.ok) throw new Error('Failed to send receipt.');
-
-      setMessage({ text: 'Receipt Sent Successfully!', type: 'success' });
+      alert('🍊 น้องส้มกำลังส่งข้อมูลใบเสร็จไปที่ Google Sheet และ Gmail ลูกค้านะคะ!');
       setCustomerName('');
       setCustomerEmail('');
       setAmount('');
@@ -50,7 +51,8 @@ export const StaffEntryForm: React.FC<StaffEntryFormProps> = ({ staffName, provi
           onReceiptIssued();
       }, 2000);
     } catch (err) {
-      setMessage({ text: 'Error: ' + err, type: 'error' });
+      console.error("Error:", err);
+      alert('อุ๊ย! ระบบขัดข้องนิดหน่อย พี่แสนลองเช็กอินเทอร์เน็ตดูนะคะ');
     } finally {
       setIsSending(false);
     }
