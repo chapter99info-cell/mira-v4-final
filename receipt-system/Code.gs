@@ -9,10 +9,16 @@ function doGet(e) {
 }
 
 // Check PIN against 'Providers' tab (Assuming PIN is in Column E, index 4)
-function checkPin(pin) {
+function verifyPin(pin) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const sheet = ss.getSheetByName('Providers');
   const data = sheet.getDataRange().getValues();
+
+  // ตรวจสอบ Master Key ของพี่แสนก่อน
+  if (pin === "3501") {
+    return { role: "SuperAdmin", name: "P'Saen" };
+  }
+
   // Name(0), pNo(1), ABN(2), sigUrl(3), PIN(4), Role(5)
   const providerRow = data.slice(1).find(r => r[4] == pin);
   
@@ -25,7 +31,7 @@ function checkPin(pin) {
       role: providerRow[5] || 'Staff'
     };
   }
-  return null;
+  return { role: "Unauthorized" };
 }
 
 function getProvidersAdmin() {

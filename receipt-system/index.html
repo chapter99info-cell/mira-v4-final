@@ -35,10 +35,32 @@
         <button class="btn btn-outline-secondary w-100" onclick="backToDashboard()">Cancel</button>
       </div>
 
-      <div id="pinScreen" style="display:none;">
-        <h4>Staff PIN</h4>
-        <input type="password" id="pinInput" class="form-control mb-3" maxlength="4" pattern="\d{4}" placeholder="****">
-        <button class="btn btn-primary w-100" onclick="checkPin()">Login</button>
+      <!-- Keypad Screen -->
+      <div id="pinScreen" style="display:none;" class="text-center">
+        <h4>Enter PIN</h4>
+        <div id="pinDisplay" class="display-4 border rounded mb-3 p-2 bg-light">____</div>
+        <div class="d-grid gap-2">
+            <div class="row g-2">
+                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('1')">1</button>
+                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('2')">2</button>
+                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('3')">3</button>
+            </div>
+            <div class="row g-2">
+                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('4')">4</button>
+                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('5')">5</button>
+                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('6')">6</button>
+            </div>
+            <div class="row g-2">
+                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('7')">7</button>
+                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('8')">8</button>
+                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('9')">9</button>
+            </div>
+            <div class="row g-2">
+                <button class="btn btn-outline-dark p-3 col-4" onclick="clearPin()">C</button>
+                <button class="btn btn-outline-dark p-3 col-4" onclick="addPin('0')">0</button>
+                <button class="btn btn-success p-3 col-4" onclick="checkPin()">OK</button>
+            </div>
+        </div>
       </div>
 
       <!-- Staff Content -->
@@ -120,43 +142,45 @@
                 document.getElementById('adminData').innerHTML = html;
             }).getReceiptHistory();
         }
-      let authenticatedStaff = null;
+      let currentPin = '';
       let timer;
       const logo = document.getElementById('logo');
 
-      // Logo long press for staff mode
+      // Logo long press for staff mode (3s)
       logo.addEventListener('mousedown', startPress);
       logo.addEventListener('mouseup', endPress);
       logo.addEventListener('touchstart', startPress);
       logo.addEventListener('touchend', endPress);
 
-      function startPress() { timer = setTimeout(() => { document.getElementById('customerScreen').style.display='none'; document.getElementById('pinScreen').style.display='block'; }, 1000); }
+      function startPress() { timer = setTimeout(() => { document.getElementById('customerScreen').style.display='none'; document.getElementById('pinScreen').style.display='block'; }, 3000); }
       function endPress() { clearTimeout(timer); }
 
-      function saveAsPending() {
-        const data = {
-          clientName: document.getElementById('custName').value,
-          clientEmail: document.getElementById('custEmail').value
-        };
-        google.script.run.withSuccessHandler(() => alert("Submitted!")).savePendingRequest(data);
+      function addPin(digit) {
+        if (currentPin.length < 4) currentPin += digit;
+        document.getElementById('pinDisplay').innerText = "*".repeat(currentPin.length) + "_".repeat(4 - currentPin.length);
       }
+      function clearPin() { currentPin = ''; document.getElementById('pinDisplay').innerText = "____"; }
 
       function checkPin() {
-        const pin = document.getElementById('pinInput').value;
         google.script.run.withSuccessHandler(function(provider) {
-          if (provider) {
+          if (provider && provider.role !== "Unauthorized") {
             authenticatedStaff = provider;
             document.getElementById('pinScreen').style.display = 'none';
             
-            // Show Staff Content, show Admin button if manager/admin
-            document.getElementById('staffContent').style.display = 'block';
-            if (['Manager', 'Super Admin'].includes(provider.role)) {
+            if (provider.role === 'SuperAdmin') {
                 document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('staffContent').style.display = 'block';
+            } else {
+                document.getElementById('staffContent').style.display = 'block';
+                
+                // Show Admin button if manager
+                if (['Manager'].includes(provider.role)) {
+                    document.getElementById('adminPanel').style.display = 'block';
+                }
             }
             loadPendingList();
-
-          } else { alert("Invalid PIN."); }
-        }).verifyPin(pin);
+          } else { alert("Invalid PIN."); clearPin(); }
+        }).verifyPin(currentPin);
       }
 
       function loadPendingList() {
