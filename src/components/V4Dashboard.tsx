@@ -24,6 +24,7 @@ import { db, handleFirestoreError, OperationType } from '../firebase';
 import { Booking, Service, Product } from '../types';
 import { brandConfig } from '../brandConfig';
 import { apiService } from '../services/api';
+import { ReceiptForm } from './ReceiptForm';
 
 interface V4DashboardProps {
   mode: 'staff-pos' | 'owner-dashboard' | 'admin-config';
@@ -38,7 +39,7 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
   const [useAlmondOil, setUseAlmondOil] = useState(false);
   const [discount, setDiscount] = useState(0);
   const [hicapsFilter, setHicapsFilter] = useState<'all' | 'hicaps' | 'private'>('all');
-  const [activeTab, setActiveTab] = useState<'bookings' | 'config'>(mode === 'admin-config' ? 'config' : 'bookings');
+  const [activeTab, setActiveTab] = useState<'bookings' | 'config' | 'receipt'>('bookings');
 
   const filteredBookings = bookings.filter(b => {
     if (hicapsFilter === 'hicaps') return b.serviceName.toLowerCase().includes('hicaps');
@@ -149,7 +150,7 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
         )}
 
         {/* Admin Config Tabs */}
-        {mode === 'admin-config' && (
+        {(mode === 'admin-config' || mode === 'staff-pos') && (
           <div className="flex gap-4 border-b border-beige/20 pb-4">
             <button 
               onClick={() => setActiveTab('bookings')}
@@ -157,12 +158,22 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
             >
               Bookings
             </button>
-            <button 
-              onClick={() => setActiveTab('config')}
-              className={`px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'config' ? 'bg-primary text-white' : 'bg-white text-earth/40'}`}
-            >
-              System Config
-            </button>
+            {mode === 'admin-config' && (
+              <button 
+                onClick={() => setActiveTab('config')}
+                className={`px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'config' ? 'bg-primary text-white' : 'bg-white text-earth/40'}`}
+              >
+                System Config
+              </button>
+            )}
+            {mode === 'staff-pos' && (
+              <button 
+                onClick={() => setActiveTab('receipt')}
+                className={`px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'receipt' ? 'bg-primary text-white' : 'bg-white text-earth/40'}`}
+              >
+                Issue Receipt
+              </button>
+            )}
           </div>
         )}
 
@@ -259,6 +270,8 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
               </div>
             </div>
           </div>
+        ) : activeTab === 'receipt' ? (
+          <ReceiptForm />
         ) : (
           <div className="bg-white p-12 rounded-[3rem] shadow-sm border border-beige/20 max-w-2xl mx-auto text-center space-y-8">
             <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto text-secondary">
