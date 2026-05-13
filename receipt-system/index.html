@@ -1,284 +1,314 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <base target="_top">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-      body { padding: 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f8f9fa; }
-      .container { max-width: 500px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-      .mode-btn { padding: 15px; font-size: 1.2rem; }
-      /* Modal Styles */
-      .modal-fullscreen {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px);
-        z-index: 1000; display: none; align-items: center; justify-content: center;
-      }
-      .modal-content {
-        background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        max-width: 400px; width: 90%; text-align: center;
-      }
-      .keypad-btn { font-size: 2rem !important; padding: 25px !important; }
-      /* Shake Animation */
-      @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-10px); }
-        50% { transform: translateX(10px); }
-        75% { transform: translateX(-10px); }
-      }
-      .shake { animation: shake 0.3s; }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <!-- Screens -->
-      <div id="customerScreen">
-        <h4>Enter Information</h4>
-        <input type="text" id="custName" class="form-control mb-2" placeholder="Full Name">
-        <input type="email" id="custEmail" class="form-control mb-3" placeholder="Email">
-        <button class="btn btn-success w-100" onclick="saveAsPending()">Submit Information</button>
-      </div>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mira Thai Massage</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    :root { --green:#4A5D23; --gold:#C5A059; --light:#f8f9fa; }
+    body { padding:20px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; background:var(--light); }
+    .card-wrap { max-width:480px; margin:auto; background:white; padding:28px; border-radius:18px; box-shadow:0 4px 20px rgba(0,0,0,.10); }
+    .brand { text-align:center; margin-bottom:22px; }
+    .brand h2 { color:var(--green); font-weight:700; margin:0; }
+    .brand p  { color:var(--gold); font-size:.85rem; margin:0; }
 
-      <!-- Add Provider Screen -->
-      <div id="addProviderScreen" style="display:none;" class="p-3 bg-white shadow rounded">
-        <h4 class="mb-4 text-center">Add New Therapist</h4>
-        <input type="text" id="addName" class="form-control form-control-lg mb-3" placeholder="Full Name">
-        <input type="text" id="addPNo" class="form-control form-control-lg mb-3" placeholder="Provider Number">
-        <input type="password" id="addPin" class="form-control form-control-lg mb-3" placeholder="PIN (4 digits)" maxlength="4" pattern="\d{4}">
-        <button class="btn btn-success btn-lg w-100 mb-2" onclick="submitAddProvider()">Save Provider</button>
-        <button class="btn btn-outline-secondary w-100" onclick="backToDashboard()">Cancel</button>
-      </div>
+    /* PIN overlay */
+    .pin-overlay { position:fixed; inset:0; background:rgba(255,255,255,.88); backdrop-filter:blur(14px); z-index:1000; display:none; align-items:center; justify-content:center; }
+    .pin-box { background:white; padding:32px 28px; border-radius:22px; box-shadow:0 10px 40px rgba(0,0,0,.18); max-width:360px; width:90%; text-align:center; }
+    .pin-dots { font-size:2.2rem; letter-spacing:10px; margin:14px 0 20px; color:var(--green); }
+    .keypad { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .kbtn { font-size:1.6rem; padding:18px 0; border:2px solid #dee2e6; border-radius:12px; background:white; cursor:pointer; transition:all .15s; }
+    .kbtn:hover { background:var(--light); border-color:var(--green); }
+    .kbtn.ok { background:var(--green); color:white; border-color:var(--green); }
+    .kbtn.ok:hover { background:#3a4a1a; }
+    .kbtn.clear { background:#fff3cd; border-color:#ffc107; }
 
-      <!-- Keypad Screen -->
-      <div id="pinScreen" class="modal-fullscreen">
-        <div class="modal-content" id="pinModalContent">
-            <h4>Enter PIN</h4>
-            <div id="pinDisplay" class="mb-4 h2">○ ○ ○ ○</div>
-            <div class="d-grid gap-2">
-                <div class="row g-2">
-                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('1')">1</button>
-                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('2')">2</button>
-                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('3')">3</button>
-                </div>
-                <div class="row g-2">
-                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('4')">4</button>
-                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('5')">5</button>
-                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('6')">6</button>
-                </div>
-                <div class="row g-2">
-                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('7')">7</button>
-                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('8')">8</button>
-                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('9')">9</button>
-                </div>
-                <div class="row g-2">
-                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="clearPin()">C</button>
-                    <button class="btn btn-outline-dark keypad-btn col-4" onclick="addPin('0')">0</button>
-                    <button class="btn btn-success keypad-btn col-4" onclick="checkPin()">OK</button>
-                </div>
-            </div>
-        </div>
-      </div>
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-10px)} 75%{transform:translateX(10px)} }
+    .shake { animation:shake .35s; }
 
-      <!-- Staff Content -->
-      <div id="staffContent" style="display:none;">
-        <form id="receiptForm" onsubmit="event.preventDefault(); submitForm();">
-          <label>Load Pending Request</label>
-          <select id="pendingSelect" class="form-select mb-3" onchange="loadPending()">
-            <option value="">Select a request...</option>
-          </select>
-          <input type="text" name="clientName" id="clientName" class="form-control mb-2" placeholder="Client Name" required>
-          <input type="email" name="clientEmail" id="clientEmail" class="form-control mb-2" placeholder="Client Email" required>
-          <input type="number" name="amount" id="amount" class="form-control mb-3" placeholder="Amount ($)" required>
-          <button type="submit" class="btn btn-success w-100">Issue Receipt</button>
-        </form>
-        <button class="btn btn-secondary w-100 mt-2" onclick="syncOfflineData()">Sync Offline Data</button>
-        <div id="adminPanel" class="mt-4" style="display:none;">
-           <hr>
-           <h4 class="text-center" style="color: #4A5D23;">Super Admin Dashboard</h4>
-           <div class="row g-2">
-             <div class="col-6"><button class="btn btn-outline-success p-3 w-100" onclick="showAddProviderModal()">➕ Add Staff</button></div>
-             <div class="col-6"><button class="btn btn-outline-info p-3 w-100" onclick="showAdminSettings()">📋 Manage Staff</button></div>
-             <div class="col-6"><button class="btn btn-outline-warning p-3 w-100" onclick="showAdminData()">📊 View Logs</button></div>
-             <div class="col-6"><button class="btn btn-outline-dark p-3 w-100" onclick="syncOfflineData()">🔄 Sync Data</button></div>
-           </div>
-           <div id="adminData" class="mt-2"></div>
-        </div>
-      </div>
-      
-      <!-- Admin Settings Screen -->
-      <div id="adminSettingsScreen" style="display:none;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 style="color: #C5A059;">Manage Staff</h4>
-            <button class="btn btn-sm btn-link" onclick="backToDashboard()">Back</button>
-        </div>
-        <div id="providersList"></div>
-      </div>
+    .screen { display:none; }
+    .screen.active { display:block; }
+    .section-title { color:var(--green); font-weight:700; margin-bottom:18px; }
+    .admin-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
+    .admin-grid .btn { padding:14px; font-size:.9rem; }
+    .footer-text { text-align:center; color:#bbb; font-size:.78rem; margin-top:36px; }
+    .lock-btn { cursor:pointer; opacity:.25; transition:.2s; user-select:none; }
+    .lock-btn:hover { opacity:1; }
+    .tag-staff { display:inline-block; background:var(--green); color:white; font-size:.75rem; padding:2px 10px; border-radius:20px; margin-bottom:14px; }
+  </style>
+</head>
+<body>
+<div class="card-wrap">
+  <div class="brand">
+    <h2>🌿 Mira Thai Massage</h2>
+    <p>Altona • Receipt System</p>
+  </div>
 
-      <div id="status" class="mt-3 text-center"></div>
-      <button class="btn btn-link mt-3 w-100" onclick="location.reload()">Back to Start</button>
-      <div class="footer-text">
-        &copy; 2026 Mira Thai Massage Altona. All rights reserved. 
-        <span class="secret-btn" onclick="openLoginPad()">🔒</span>
+  <!-- ① Customer Screen -->
+  <div id="screenCustomer" class="screen active">
+    <h5 class="section-title">Enter Your Information</h5>
+    <input type="text"  id="custName"  class="form-control form-control-lg mb-2" placeholder="Full Name">
+    <input type="email" id="custEmail" class="form-control form-control-lg mb-3" placeholder="Email Address">
+    <button class="btn btn-success btn-lg w-100" onclick="saveAsPending()">Submit Information</button>
+    <div id="custStatus" class="mt-3 text-center text-success fw-semibold"></div>
+  </div>
+
+  <!-- ② Staff Screen -->
+  <div id="screenStaff" class="screen">
+    <div id="staffTag" class="tag-staff">👤 —</div>
+    <h5 class="section-title">Issue Receipt</h5>
+    <label class="form-label fw-semibold">Load Pending Request</label>
+    <select id="pendingSelect" class="form-select mb-3" onchange="loadPending()">
+      <option value="">Select a pending request…</option>
+    </select>
+    <input type="text"   id="clientName"  class="form-control mb-2" placeholder="Client Name">
+    <input type="email"  id="clientEmail" class="form-control mb-2" placeholder="Client Email">
+    <input type="number" id="amount"      class="form-control mb-3" placeholder="Amount ($)">
+    <button class="btn btn-success w-100 btn-lg" onclick="submitReceipt()">Issue Receipt</button>
+    <button class="btn btn-outline-secondary w-100 mt-2" onclick="syncOfflineData()">🔄 Sync Offline Data</button>
+    <div id="receiptStatus" class="mt-3 text-center fw-semibold"></div>
+
+    <div id="adminPanel" style="display:none;">
+      <hr>
+      <h5 class="text-center" style="color:var(--gold);">Admin Dashboard</h5>
+      <div class="admin-grid">
+        <button class="btn btn-outline-success" onclick="showScreen('screenAddProvider')">➕ Add Staff</button>
+        <button class="btn btn-outline-info"    onclick="showScreen('screenManageStaff');loadStaffList()">📋 Manage Staff</button>
+        <button class="btn btn-outline-warning" onclick="showAdminLogs()">📊 View Logs</button>
+        <button class="btn btn-outline-dark"    onclick="syncOfflineData()">🔄 Sync Data</button>
       </div>
+      <div id="adminData" class="mt-3"></div>
     </div>
-    <style>
-      .footer-text { text-align: center; color: #999; font-size: 0.8rem; margin-top: 40px; }
-      .secret-btn { cursor: pointer; opacity: 0.3; transition: 0.2s; }
-      .secret-btn:hover { opacity: 1; }
-    </style>
-        function backToDashboard() {
-            document.getElementById('adminSettingsScreen').style.display = 'none';
-            document.getElementById('staffContent').style.display = 'block';
-        }
-        function showAddProviderModal() {
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('addProviderScreen').style.display = 'block';
-        }
+  </div>
 
-        function submitAddProvider() {
-            const data = {
-                name: document.getElementById('addName').value,
-                providerNo: document.getElementById('addPNo').value,
-                pin: document.getElementById('addPin').value
-            };
-            if(!data.name || !data.providerNo || !data.pin || data.pin.length !== 4) {
-                alert("Please fill all fields correctly. PIN must be 4 digits.");
-                return;
-            }
-            google.script.run.withSuccessHandler(() => {
-                alert("Success! New Therapist Added");
-                // Clear form and go back
-                document.getElementById('addName').value = '';
-                document.getElementById('addPNo').value = '';
-                document.getElementById('addPin').value = '';
-                backToDashboard();
-                if(document.getElementById('adminSettingsScreen').style.display === 'block') showAdminSettings();
-            }).addProvider(data);
-        }
-        function showAdminData() {
-            google.script.run.withSuccessHandler(function(data) {
-                let html = '<table class="table table-sm"><tr><th>Date</th><th>Receipt</th><th>Client</th><th>Amount</th></tr>';
-                data.forEach(r => {
-                    html += `<tr><td>${r[4]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[6]}</td></tr>`;
-                });
-                html += '</table>';
-                document.getElementById('adminData').innerHTML = html;
-            }).getReceiptHistory();
-        }
-      let currentPin = '';
-      let timer;
+  <!-- ③ Add Provider Screen -->
+  <div id="screenAddProvider" class="screen">
+    <h5 class="section-title">➕ Add New Therapist</h5>
+    <input type="text"     id="addName" class="form-control form-control-lg mb-3" placeholder="Full Name">
+    <input type="text"     id="addPNo"  class="form-control form-control-lg mb-3" placeholder="Provider Number">
+    <input type="password" id="addPin"  class="form-control form-control-lg mb-3" placeholder="PIN (4 digits)" maxlength="4" inputmode="numeric">
+    <button class="btn btn-success btn-lg w-100 mb-2" onclick="submitAddProvider()">Save Therapist</button>
+    <button class="btn btn-outline-secondary w-100"   onclick="showScreen('screenStaff')">Cancel</button>
+  </div>
 
-        function openLoginPad() {
-            document.getElementById('pinScreen').style.display='flex';
-        }
+  <!-- ④ Manage Staff Screen -->
+  <div id="screenManageStaff" class="screen">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="section-title mb-0">📋 Manage Staff</h5>
+      <button class="btn btn-sm btn-link" onclick="showScreen('screenStaff')">← Back</button>
+    </div>
+    <div id="providersList"></div>
+  </div>
 
-      function addPin(digit) {
-        if (currentPin.length < 4) {
-            currentPin += digit;
-            updateDots();
-        }
+  <!-- PIN Overlay -->
+  <div id="pinOverlay" class="pin-overlay">
+    <div class="pin-box" id="pinBox">
+      <h5 style="color:var(--green);">🔐 Staff Login</h5>
+      <div id="pinDots" class="pin-dots">○ ○ ○ ○</div>
+      <div class="keypad">
+        <button class="kbtn" onclick="kp('1')">1</button>
+        <button class="kbtn" onclick="kp('2')">2</button>
+        <button class="kbtn" onclick="kp('3')">3</button>
+        <button class="kbtn" onclick="kp('4')">4</button>
+        <button class="kbtn" onclick="kp('5')">5</button>
+        <button class="kbtn" onclick="kp('6')">6</button>
+        <button class="kbtn" onclick="kp('7')">7</button>
+        <button class="kbtn" onclick="kp('8')">8</button>
+        <button class="kbtn" onclick="kp('9')">9</button>
+        <button class="kbtn clear" onclick="kpClear()">C</button>
+        <button class="kbtn" onclick="kp('0')">0</button>
+        <button class="kbtn ok"    onclick="kpSubmit()">OK</button>
+      </div>
+      <button class="btn btn-link mt-3 text-secondary" onclick="closePinOverlay()">Cancel</button>
+    </div>
+  </div>
+
+  <div class="footer-text">
+    &copy; 2026 Mira Thai Massage Altona. All rights reserved.
+    <span class="lock-btn" onclick="openPinOverlay()">🔒</span>
+  </div>
+</div>
+
+<script>
+var staff = null;
+var pin   = '';
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+// ── Customer ──────────────────────────────────────────────────
+function saveAsPending() {
+  var name  = document.getElementById('custName').value.trim();
+  var email = document.getElementById('custEmail').value.trim();
+  if (!name || !email) { alert('Please enter your name and email.'); return; }
+  document.getElementById('custStatus').innerText = 'Submitting…';
+  google.script.run
+    .withSuccessHandler(function() {
+      document.getElementById('custStatus').innerText = '✅ Submitted! Please wait for staff.';
+      document.getElementById('custName').value  = '';
+      document.getElementById('custEmail').value = '';
+    })
+    .withFailureHandler(function(e){ document.getElementById('custStatus').innerText = '❌ ' + e.message; })
+    .savePendingRequest({ name:name, email:email });
+}
+
+// ── PIN ───────────────────────────────────────────────────────
+function openPinOverlay()  { pin=''; updateDots(); document.getElementById('pinOverlay').style.display='flex'; }
+function closePinOverlay() { document.getElementById('pinOverlay').style.display='none'; pin=''; }
+function kp(d) { if(pin.length<4){ pin+=d; updateDots(); } }
+function kpClear() { pin=''; updateDots(); }
+function updateDots() {
+  var s='';
+  for(var i=0;i<4;i++) s+=(i<pin.length?'●':'○')+' ';
+  document.getElementById('pinDots').innerText=s.trim();
+}
+function kpSubmit() {
+  if(pin.length<4){ alert('Enter 4-digit PIN'); return; }
+  google.script.run
+    .withSuccessHandler(function(provider){
+      if(provider && provider.role!=='Unauthorized'){
+        staff=provider;
+        closePinOverlay();
+        document.getElementById('staffTag').innerText='👤 '+staff.name+' ('+staff.role+')';
+        showScreen('screenStaff');
+        document.getElementById('adminPanel').style.display =
+          (staff.role==='SuperAdmin'||staff.role==='Manager') ? 'block' : 'none';
+        loadPendingList();
+      } else {
+        var box=document.getElementById('pinBox');
+        box.classList.add('shake');
+        setTimeout(function(){ box.classList.remove('shake'); },400);
+        pin=''; updateDots();
       }
-      function clearPin() { currentPin = ''; updateDots(); }
-      
-      function updateDots() {
-          let dots = "";
-          for(let i=0; i<4; i++) {
-              dots += (i < currentPin.length) ? "● " : "○ ";
-          }
-          document.getElementById('pinDisplay').innerText = dots;
-      }
+    })
+    .withFailureHandler(function(e){ alert('Error: '+e.message); pin=''; updateDots(); })
+    .verifyPin(pin);
+}
 
-      function checkPin() {
-        google.script.run.withSuccessHandler(function(provider) {
-          if (provider && provider.role !== "Unauthorized") {
-            authenticatedStaff = provider;
-            document.getElementById('pinScreen').style.display = 'none';
-            clearPin();
-            
-            if (provider.role === 'SuperAdmin') {
-                document.getElementById('adminPanel').style.display = 'block';
-                document.getElementById('staffContent').style.display = 'block';
-            } else {
-                document.getElementById('staffContent').style.display = 'block';
-                
-                // Show Admin button if manager
-                if (['Manager'].includes(provider.role)) {
-                    document.getElementById('adminPanel').style.display = 'block';
-                }
-            }
-            loadPendingList();
-          } else { 
-            // Shake effect
-            const modal = document.getElementById('pinModalContent');
-            modal.classList.add('shake');
-            setTimeout(() => modal.classList.remove('shake'), 300);
-            clearPin(); 
-          }
-        }).verifyPin(currentPin);
-      }
+// ── Pending ───────────────────────────────────────────────────
+function loadPendingList() {
+  google.script.run
+    .withSuccessHandler(function(data){
+      var sel=document.getElementById('pendingSelect');
+      sel.innerHTML='<option value="">Select a pending request…</option>';
+      data.forEach(function(p){
+        sel.innerHTML+='<option value=\''+JSON.stringify(p)+'\'>'+p.name+' — '+p.email+'</option>';
+      });
+    })
+    .withFailureHandler(function(e){ console.error(e.message); })
+    .getPendingRequests();
+}
+function loadPending() {
+  var val=document.getElementById('pendingSelect').value;
+  if(!val) return;
+  var d=JSON.parse(val);
+  document.getElementById('clientName').value  = d.name||'';
+  document.getElementById('clientEmail').value = d.email||'';
+}
 
-      function loadPendingList() {
-        google.script.run.withSuccessHandler(function(data) {
-          const select = document.getElementById('pendingSelect');
-          data.forEach(p => {
-            select.innerHTML += `<option value='${JSON.stringify(p)}'>${p.name} - ${p.email}</option>`;
-          });
-        }).getPendingRequests();
-      }
-
-      function loadPending() {
-        const val = document.getElementById('pendingSelect').value;
-        if(!val) return;
-        const data = JSON.parse(val);
-        document.getElementById('clientName').value = data.name;
-        document.getElementById('clientEmail').value = data.email;
-      }
-
-      function submitForm() {
-        const data = {
-          clientName: document.getElementById('clientName').value,
-          clientEmail: document.getElementById('clientEmail').value,
-          amount: document.getElementById('amount').value,
-          therapist: authenticatedStaff.name,
-          pin: document.getElementById('pinInput').value
-        };
-
-        if (navigator.onLine) {
-          google.script.run.withSuccessHandler(() => {
-            document.getElementById('status').innerText = "Receipt Issued!";
-            document.getElementById('receiptForm').reset();
-          }).processReceipt(data);
+// ── Receipt ───────────────────────────────────────────────────
+function submitReceipt() {
+  if(!staff){ alert('Not logged in.'); return; }
+  var name=document.getElementById('clientName').value.trim();
+  var email=document.getElementById('clientEmail').value.trim();
+  var amt=document.getElementById('amount').value.trim();
+  if(!name||!email||!amt){ alert('Please fill in all fields.'); return; }
+  var data={ clientName:name, clientEmail:email, amount:amt, therapist:staff.name };
+  document.getElementById('receiptStatus').innerText='⏳ Sending receipt…';
+  if(navigator.onLine){
+    google.script.run
+      .withSuccessHandler(function(res){
+        if(res.success){
+          document.getElementById('receiptStatus').innerText='✅ Receipt sent! ('+res.receiptNo+')';
+          document.getElementById('clientName').value='';
+          document.getElementById('clientEmail').value='';
+          document.getElementById('amount').value='';
+          document.getElementById('pendingSelect').value='';
         } else {
-          const offlineReceipts = JSON.parse(localStorage.getItem('offlineReceipts') || '[]');
-          offlineReceipts.push(data);
-          localStorage.setItem('offlineReceipts', JSON.stringify(offlineReceipts));
-          alert("Saved offline. Sync later.");
+          document.getElementById('receiptStatus').innerText='❌ Failed: '+res.error;
         }
-      }
+      })
+      .withFailureHandler(function(e){ document.getElementById('receiptStatus').innerText='❌ '+e.message; })
+      .processReceipt(data);
+  } else {
+    var offline=JSON.parse(localStorage.getItem('offlineReceipts')||'[]');
+    offline.push(data);
+    localStorage.setItem('offlineReceipts',JSON.stringify(offline));
+    document.getElementById('receiptStatus').innerText='💾 Saved offline. Sync when connected.';
+  }
+}
 
-      function syncOfflineData() {
-        const offlineReceipts = JSON.parse(localStorage.getItem('offlineReceipts') || '[]');
-        if (offlineReceipts.length === 0) { alert("No data to sync."); return; }
-        google.script.run.withSuccessHandler(() => { alert("Sync complete!"); localStorage.removeItem('offlineReceipts'); }).syncOfflineData(offlineReceipts);
-      }
+// ── Sync ──────────────────────────────────────────────────────
+function syncOfflineData() {
+  var offline=JSON.parse(localStorage.getItem('offlineReceipts')||'[]');
+  if(!offline.length){ alert('No offline data to sync.'); return; }
+  google.script.run
+    .withSuccessHandler(function(){ alert('✅ Sync complete! '+offline.length+' record(s) uploaded.'); localStorage.removeItem('offlineReceipts'); })
+    .withFailureHandler(function(e){ alert('Sync error: '+e.message); })
+    .syncOfflineData(offline);
+}
 
-      function showAdminSettings() {
-        document.getElementById('staffContent').style.display = 'none';
-        document.getElementById('adminSettingsScreen').style.display = 'block';
-        google.script.run.withSuccessHandler(function(providers) {
-          let html = '<table class="table"><tr><th>Name</th><th>PIN</th><th>Action</th></tr>';
-          providers.forEach(p => {
-             html += `<tr><td>${p[0]}</td><td><input type="text" id="pin_${p[0]}" value="${p[4]}"></td><td><button class="btn btn-sm btn-success" onclick="updateProvider('${p[0]}')">Save</button></td></tr>`;
-          });
-          html += '</table>';
-          document.getElementById('providersList').innerHTML = html;
-        }).getProvidersAdmin();
-      }
+// ── Admin: Logs ───────────────────────────────────────────────
+function showAdminLogs() {
+  google.script.run
+    .withSuccessHandler(function(rows){
+      if(!rows.length){ document.getElementById('adminData').innerHTML='<p class="text-muted">No records yet.</p>'; return; }
+      var html='<div class="table-responsive"><table class="table table-sm table-bordered"><thead><tr><th>Date</th><th>Receipt</th><th>Client</th><th>$</th><th>Status</th></tr></thead><tbody>';
+      rows.forEach(function(r){ html+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[6]+'</td><td>'+r[7]+'</td></tr>'; });
+      html+='</tbody></table></div>';
+      document.getElementById('adminData').innerHTML=html;
+    })
+    .withFailureHandler(function(e){ alert('Error: '+e.message); })
+    .getReceiptHistory();
+}
 
-      function updateProvider(name) {
-        const pin = document.getElementById('pin_'+name).value;
-        google.script.run.withSuccessHandler(() => alert("Updated!")).updateProvider(name, "", "", pin);
-      }
+// ── Admin: Add Staff ──────────────────────────────────────────
+function submitAddProvider() {
+  var name=document.getElementById('addName').value.trim();
+  var pno=document.getElementById('addPNo').value.trim();
+  var p=document.getElementById('addPin').value.trim();
+  if(!name||!pno||p.length!==4||isNaN(p)){ alert('Please fill all fields. PIN must be exactly 4 digits.'); return; }
+  google.script.run
+    .withSuccessHandler(function(){
+      alert('✅ Therapist "'+name+'" added!');
+      document.getElementById('addName').value='';
+      document.getElementById('addPNo').value='';
+      document.getElementById('addPin').value='';
+      showScreen('screenStaff');
+    })
+    .withFailureHandler(function(e){ alert('Error: '+e.message); })
+    .addProvider({ name:name, providerNo:pno, pin:p });
+}
 
-    </script>
-  </body>
+// ── Admin: Manage Staff ───────────────────────────────────────
+function loadStaffList() {
+  google.script.run
+    .withSuccessHandler(function(providers){
+      if(!providers.length){ document.getElementById('providersList').innerHTML='<p class="text-muted">No staff found.</p>'; return; }
+      var html='<table class="table table-bordered"><thead><tr><th>Name</th><th>PIN</th><th></th></tr></thead><tbody>';
+      providers.forEach(function(p){
+        var key=p[0].replace(/\s/g,'_');
+        html+='<tr><td>'+p[0]+'</td><td><input type="text" id="pin_'+key+'" value="'+p[4]+'" class="form-control form-control-sm" maxlength="4"></td><td><button class="btn btn-sm btn-success" onclick="updateStaff(\''+p[0]+'\')">Save</button></td></tr>';
+      });
+      html+='</tbody></table>';
+      document.getElementById('providersList').innerHTML=html;
+    })
+    .withFailureHandler(function(e){ alert('Error: '+e.message); })
+    .getProvidersAdmin();
+}
+function updateStaff(name) {
+  var key=name.replace(/\s/g,'_');
+  var p=document.getElementById('pin_'+key).value.trim();
+  if(p.length!==4||isNaN(p)){ alert('PIN must be 4 digits.'); return; }
+  google.script.run
+    .withSuccessHandler(function(){ alert('✅ PIN updated for '+name); })
+    .withFailureHandler(function(e){ alert('Error: '+e.message); })
+    .updateProvider(name,'','',p);
+}
+</script>
+</body>
 </html>
