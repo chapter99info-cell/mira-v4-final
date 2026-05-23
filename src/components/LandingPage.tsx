@@ -7,12 +7,14 @@ import { CustomerReviews } from './CustomerReviews';
 import { UpsellModal } from './UpsellModal';
 import { V4Dashboard } from './V4Dashboard';
 import { StaffEntryForm } from './StaffEntryForm';
+import { useFirebaseUrl } from '../firebase';
 
 interface LandingPageProps {
   onBookNow: (service?: Service, withCoconut?: boolean, duration?: number) => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
+  const heroImageUrl = useFirebaseUrl(brandConfig.heroImage);
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<'All' | 'Standard' | 'Remedial'>('All');
   const [showLogin, setShowLogin] = useState(false);
@@ -40,7 +42,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
         {/* Mural Background with Gradient Fade */}
         <div className="absolute inset-0">
           <img 
-            src={brandConfig.heroImage} 
+            src={heroImageUrl || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=1200&h=800"} 
             alt="MIRA Hero" 
             className="w-full h-full object-cover object-center transition-transform duration-1000"
           />
@@ -129,7 +131,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                 </video>
               ) : (
                 <img 
-                  src={brandConfig.heroImage} 
+                  src={heroImageUrl || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=1200&h=800"} 
                   alt="Atmosphere" 
                   className="w-full h-full object-cover"
                 />
