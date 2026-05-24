@@ -431,6 +431,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                 </a>
               </li>
               <li>
+                <a 
+                  href={brandConfig.googleReviewLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/60 hover:text-white transition-colors flex items-center gap-2 group"
+                >
+                  <ChevronRight size={14} className="text-secondary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  Google Reviews / รีวิว
+                </a>
+              </li>
+              <li>
                 <button onClick={handleBookNow} className="text-white/60 hover:text-white transition-colors flex items-center gap-2 group">
                   <ChevronRight size={14} className="text-secondary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   Book Now
