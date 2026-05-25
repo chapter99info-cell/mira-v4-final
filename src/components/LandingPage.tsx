@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { brandConfig } from '../brandConfig';
 import { motion } from 'motion/react';
-import { Clock, DollarSign, ChevronRight, MapPin, Phone, Instagram, Facebook, Sparkles, Mail, ShieldCheck } from 'lucide-react';
+import { Clock, DollarSign, ChevronRight, MapPin, Phone, Instagram, Facebook, Sparkles, Mail, ShieldCheck, Calendar, Gift } from 'lucide-react';
 import { Service } from '../types';
 import { CustomerReviews } from './CustomerReviews';
 import { UpsellModal } from './UpsellModal';
@@ -19,6 +19,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
   const [activeCategory, setActiveCategory] = useState<'All' | 'Standard' | 'Remedial'>('All');
   const [showLogin, setShowLogin] = useState(false);
   const [auth, setAuth] = useState<null | {role: string, name: string, pin: string}>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleBookNow = () => {
     window.open(brandConfig.bookingUrl, '_blank');
@@ -37,6 +50,43 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
 
   return (
     <div className="bg-white text-earth selection:bg-primary/20 font-sans min-h-screen pb-24">
+      {/* Sticky Premium Header Navbar */}
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md py-4 shadow-lg border-b border-beige/10' : 'bg-transparent py-5'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <img src={brandConfig.logo} alt="MIRA Logo" className="w-10 h-10 rounded-full object-cover border border-[#C5A059] shadow-sm" />
+            <span className={`font-serif font-bold text-lg tracking-tight transition-colors ${isScrolled ? 'text-primary' : 'text-white'}`}>
+              MIRA Massage
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <a 
+              href={brandConfig.bookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${
+                isScrolled 
+                  ? 'bg-primary text-white hover:bg-sage shadow-md' 
+                  : 'bg-white text-primary hover:bg-white/90 shadow'
+              }`}
+            >
+              <Calendar size={13} className="text-[#C5A059]" />
+              <span>Book Now / จองคิว</span>
+            </a>
+            <a 
+              href={brandConfig.bookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#C5A059] text-white hover:bg-opacity-95 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all shadow-md"
+            >
+              <Gift size={13} />
+              <span>Buy Gift Voucher / บัตรของขวัญ</span>
+            </a>
+          </div>
+        </div>
+      </header>
+
       {/* Header (The Hero) */}
       <section className="relative h-[70vh] md:h-[85vh] flex flex-col items-center justify-start overflow-hidden">
         {/* Mural Background with Gradient Fade */}
@@ -77,18 +127,67 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
           <p className="text-earth/70 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-light">
             {brandConfig.description}
           </p>
-          <div className="mt-10 flex flex-col md:flex-row items-center justify-center gap-4">
-            <a 
+          <div className="mt-10 max-w-md mx-auto space-y-5">
+            {/* BOOK NOW Button */}
+            <motion.a 
               href={brandConfig.bookingUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full md:w-auto bg-primary text-white px-10 py-5 rounded-full text-sm font-bold uppercase tracking-[0.2em] hover:bg-sage transition-all shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 flex items-center justify-center"
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full bg-[#4A5D23] text-white py-4 px-6 rounded-full shadow-xl shadow-primary/20 hover:bg-[#8A9A5B] transition-all flex items-center gap-5 border-2 border-transparent"
+              style={{ minHeight: '84px' }}
             >
-              Book Your Session / จองที่นี่
-            </a>
-            <a href="#services" className="text-primary font-bold uppercase tracking-widest text-xs hover:underline underline-offset-8 px-6 py-4">
-              Explore Services
-            </a>
+              <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 flex items-center justify-center text-secondary flex-shrink-0">
+                <Calendar size={22} className="text-[#C5A059]" />
+              </div>
+              <div className="text-left flex-grow">
+                <p className="text-sm md:text-base font-bold uppercase tracking-[0.15em] text-white">BOOK NOW</p>
+                <p className="text-xs text-white/80 font-normal">Reserve your session / จองนวดเพื่อความผ่อนคลาย</p>
+              </div>
+              <ChevronRight size={18} className="text-white/40 flex-shrink-0" />
+            </motion.a>
+
+            {/* BUY GIFT VOUCHER Button */}
+            <motion.a 
+              href={brandConfig.bookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full bg-white text-[#4A5D23] border-2 border-[#4A5D23]/30 py-4 px-6 rounded-full shadow-lg hover:shadow-xl hover:border-[#4A5D23]/60 transition-all flex items-center gap-5"
+              style={{ minHeight: '84px' }}
+            >
+              <div className="w-12 h-12 rounded-full border border-[#4A5D23]/10 bg-[#4A5D23]/5 flex items-center justify-center text-[#4A5D23] flex-shrink-0">
+                <Gift size={22} className="text-[#4A5D23]" />
+              </div>
+              <div className="text-left flex-grow">
+                <p className="text-sm md:text-base font-bold uppercase tracking-[0.15em]">BUY GIFT VOUCHER</p>
+                <p className="text-xs text-[#2D2A26]/75 font-normal">The perfect gift of relaxation / ซื้อบัตรของขวัญกิ๊ฟต์วอยเชอร์</p>
+              </div>
+              <ChevronRight size={18} className="text-[#4A5D23]/40 flex-shrink-0" />
+            </motion.a>
+
+            {/* Sub-text / Quick address info matching mockup */}
+            <div className="pt-6 border-t border-beige/20 text-center space-y-1.5">
+              <div className="flex justify-center mb-1">
+                <div className="w-7 h-7 rounded-full bg-[#C5A059]/10 flex items-center justify-center text-[#C5A059]">
+                  <MapPin size={15} />
+                </div>
+              </div>
+              <p className="text-sm font-semibold text-[#4A5D23] leading-snug">
+                Level 1 /76 Pier St. Altona
+              </p>
+              <p className="text-xs text-[#2D2A26]/50 font-medium">
+                VIC 3018, Australia
+              </p>
+            </div>
+
+            <div className="pt-2">
+              <a href="#services" className="text-[#4A5D23] font-bold uppercase tracking-widest text-[11px] hover:underline underline-offset-8 inline-block py-2">
+                Explore Services / ดูเมนูบริการทั้งหมด
+              </a>
+            </div>
           </div>
         </motion.div>
       </section>
@@ -275,9 +374,27 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                     ))}
                   </div>
 
-                  <button className="w-full bg-primary text-white py-4 rounded-2xl text-xs font-bold uppercase tracking-[0.2em] shadow-lg shadow-primary/20 group-hover:bg-sage transition-all">
-                    Book Your Session / จองที่นี่
-                  </button>
+                  <div className="flex flex-col gap-2">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBookNow();
+                      }}
+                      className="w-full bg-[#4A5D23] text-white py-4 rounded-2xl text-xs font-bold uppercase tracking-[0.2em] shadow-lg shadow-primary/20 hover:bg-[#8A9A5B] transition-all"
+                    >
+                      Book Your Session / จองที่นี่
+                    </button>
+                    <a 
+                      href={brandConfig.bookingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-full border-2 border-primary/20 hover:border-primary/60 text-primary py-3 rounded-2xl text-xs font-bold uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2 bg-transparent"
+                    >
+                      <Gift size={14} className="text-[#C5A059]" />
+                      <span>Buy as Gift Voucher / ซื้อเป็นบัตรของขวัญ</span>
+                    </a>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -447,6 +564,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                   Book Now
                 </button>
               </li>
+              <li>
+                <a 
+                  href={brandConfig.bookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer" 
+                  className="text-white/60 hover:text-white transition-colors flex items-center gap-2 group"
+                >
+                  <ChevronRight size={14} className="text-secondary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  Buy Gift Voucher / บัตรของขวัญ
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -466,14 +594,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                 </div>
               </div>
               
-              <a 
-                href={brandConfig.bookingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-secondary text-white py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-white hover:text-primary transition-all shadow-xl shadow-secondary/10 flex items-center justify-center text-sm"
-              >
-                Book Your Session / จองที่นี่
-              </a>
+              <div className="flex flex-col gap-3">
+                <a 
+                  href={brandConfig.bookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-secondary text-white py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-white hover:text-primary transition-all shadow-xl shadow-secondary/10 flex items-center justify-center text-xs"
+                >
+                  Book Your Session / จองที่นี่
+                </a>
+                <a 
+                  href={brandConfig.bookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white py-4 rounded-2xl font-bold uppercase tracking-widest transition-all flex items-center justify-center text-xs gap-2"
+                >
+                  <Gift size={16} className="text-secondary" />
+                  <span>Buy Gift Voucher / บัตรของขวัญ</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
