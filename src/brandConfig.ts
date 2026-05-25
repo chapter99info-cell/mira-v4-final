@@ -2,7 +2,7 @@ import { Service, Staff, Holiday } from './types';
 
 export const brandConfig = {
   name: "Mira Thai Massage Altona (HICAPS)",
-  description: "Traditional Thai healing meets modern clinical precision. Experience the art of massage in a sanctuary designed for your recovery.",
+  description: "Experience Thai Combination Massage with premium Magnesium Oil therapy — designed to relieve muscle tension, reduce stress, support recovery, and promote deep relaxation",
   location: "Level 1/76 Pier Street, Altona 3018",
   phone: "0466992456",
   bookingUrl: "https://mira.book.receptionerapp.com/",
