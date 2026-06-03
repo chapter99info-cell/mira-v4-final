@@ -1,5 +1,6 @@
 {
   "name": "mirathaimassage.com.au / ploy",
   "description": "A premium booking experience for Mira Remedial Thai Massage, featuring 'Modern Thai Heritage' design, smart calendar with buffer times, and deposit collection.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

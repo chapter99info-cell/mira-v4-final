@@ -54,7 +54,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md py-4 shadow-lg border-b border-beige/10' : 'bg-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <img src={brandConfig.logo} alt="MIRA Logo" className="w-10 h-10 rounded-full object-cover border border-[#C5A059] shadow-sm" />
+            <img src={brandConfig.logo} alt="MIRA Logo" className="w-10 h-10 rounded-full object-cover border border-[#C5A059] shadow-sm" referrerPolicy="no-referrer" />
             <span className={`font-serif font-bold text-lg tracking-tight transition-colors ${isScrolled ? 'text-primary' : 'text-white'}`}>
               MIRA Massage
             </span>
@@ -90,12 +90,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
       {/* Header (The Hero) */}
       <section className="relative h-[70vh] md:h-[85vh] flex flex-col items-center justify-start overflow-hidden">
         {/* Mural Background with Gradient Fade */}
-        <div className="absolute inset-0">
-          <img 
-            src={heroImageUrl || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=1200&h=800"} 
-            alt="MIRA Hero" 
-            className="w-full h-full object-cover object-center transition-transform duration-1000"
-          />
+        <div className="absolute inset-0 bg-neutral-900">
+          {heroImageUrl && (heroImageUrl.toLowerCase().includes('.mp4') || heroImageUrl.toLowerCase().includes('.webm') || heroImageUrl.toLowerCase().includes('/vdo/') || heroImageUrl.toLowerCase().includes('/vdo%2f')) ? (
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+              className="w-full h-full object-cover object-center"
+            >
+              <source src={heroImageUrl} type="video/mp4" />
+            </video>
+          ) : (
+            <img 
+              src={heroImageUrl || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=1200&h=800"} 
+              alt="MIRA Hero" 
+              className="w-full h-full object-cover object-center transition-transform duration-1000"
+              referrerPolicy="no-referrer"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-white" />
         </div>
         
@@ -107,7 +120,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
           className="relative z-10 mt-12"
         >
           <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white shadow-2xl overflow-hidden">
-            <img src={brandConfig.logo} alt="MIRA Logo" className="w-full h-full object-cover" />
+            <img src={brandConfig.logo} alt="MIRA Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
           </div>
         </motion.div>
       </section>
@@ -220,6 +233,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
             <div className="relative aspect-video rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white bg-beige/10">
               {(brandConfig as any).promoVideo ? (
                 <video 
+                  key={(brandConfig as any).promoVideo}
                   autoPlay 
                   loop 
                   muted 
@@ -233,6 +247,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                   src={heroImageUrl || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=1200&h=800"} 
                   alt="Atmosphere" 
                   className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
                 />
               )}
             </div>

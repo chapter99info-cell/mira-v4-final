@@ -8,9 +8,9 @@ export const brandConfig = {
   bookingUrl: "https://mira.book.receptionerapp.com/",
   googleReviewLink: "https://maps.app.goo.gl/L2fyvazbuX3s56Rj8",
   email: "miraremedial@gmail.com",
-  logo: "https://firebasestorage.googleapis.com/v0/b/studio-6368441530-fca54.firebasestorage.app/o/chapter99%20studio%2FMira%20Thai%20Massage%2Flogo%20Mira%2FLogo%20-%20MIRA-02.jpg?alt=media&token=d907378d-34fa-4c09-be94-07f039855304",
-  heroImage: "https://firebasestorage.googleapis.com/v0/b/v4-massage-edition-2026.firebasestorage.app/o/Pictures%2Fcover%2FGemini_Generated_Image_8c0r1e8c0r1e8c0r.png?alt=media&token=9c59a9cb-a949-48ec-a8a7-931677a32dec",
-  promoVideo: "https://firebasestorage.googleapis.com/v0/b/v4-massage-edition-2026.firebasestorage.app/o/VDO%2FIntroducing_the_promotional_hi.mp4?alt=media&token=71c9d236-45ec-40f1-adf5-38c2ee1c4fc3",
+  logo: "https://storage.googleapis.com/thai-massage-master-temp-2026.firebasestorage.app/web-mirathai/photos/Logo/Logo%20-%20MIRA-02.jpg",
+  heroImage: "https://storage.googleapis.com/thai-massage-master-temp-2026.firebasestorage.app/web-mirathai/photos/Cover/Gemini_Generated_Image_8c0r1e8c0r1e8c0r.png",
+  promoVideo: "https://storage.googleapis.com/thai-massage-master-temp-2026.firebasestorage.app/web-mirathai/VDO/0603.mp4",
   colors: {
     primary: "#4A5D23", // Deep Moss Green
     secondary: "#C5A059", // Antique Gold
