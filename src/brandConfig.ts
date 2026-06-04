@@ -82,7 +82,7 @@ export const brandConfig = {
       fullPrice: 105,
       depositAmount: 40,
       duration: 60,
-      image: SERVICE_CARD_IMAGE_URL,
+      image: "https://euiwkvozrhnbxttfuchh.supabase.co/storage/v1/object/public/mira-assets/Mira%20web/service%20cards/backThai%20Deep%20Tissue.png",
       rates: { "30": 75, "60": 105, "90": 155, "120": 205 },
       bestFor: "Severe muscle tightness & structural imbalances",
       keyBenefits: ["Maximum Pain Relief", "Clinical Expertise", "Deep Muscle Alignment"],
