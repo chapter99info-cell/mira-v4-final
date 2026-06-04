@@ -104,9 +104,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
             <img
               src={brandConfig.logo}
               alt="Mira Thai Massage logo / โลโก้มิรา"
-              width={80}
-              className="h-auto object-contain"
-              style={{ width: '80px', height: 'auto', objectFit: 'contain' }}
+              width={56}
+              height={56}
+              className="overflow-hidden rounded-full object-cover"
+              style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                overflow: 'hidden',
+              }}
             />
           </button>
           
