@@ -59,19 +59,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
       {/* Sticky Premium Header Navbar */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md py-4 shadow-lg border-b border-beige/10' : 'bg-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="cursor-pointer border-0 bg-transparent p-0"
+            aria-label="Mira Thai Massage home"
+          >
             <img
               src={brandConfig.logo}
-              alt="MIRA Massage logo / โลโก้มิรา"
-              className="w-10 h-10 rounded-full object-cover border border-[#C5A059] shadow-sm"
-              onError={(e) => {
-                e.currentTarget.src = HERO_IMAGE_URL;
-              }}
+              alt="Mira Thai Massage logo / โลโก้มิรา"
+              width={80}
+              className="h-auto object-contain"
+              style={{ width: '80px', height: 'auto', objectFit: 'contain' }}
             />
-            <span className={`font-serif font-bold text-lg tracking-tight transition-colors ${isScrolled ? 'text-primary' : 'text-white'}`}>
-              MIRA Massage
-            </span>
-          </div>
+          </button>
           
           <div className="flex items-center gap-3">
             <a 
@@ -121,18 +122,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
             aria-hidden
           />
         </div>
-        
-        {/* Circular Logo */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="relative z-10 mt-12"
-        >
-          <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white shadow-2xl overflow-hidden">
-            <img src={brandConfig.logo} alt="MIRA Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-          </div>
-        </motion.div>
       </section>
 
       {/* Introduction Section */}
