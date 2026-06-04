@@ -75,6 +75,7 @@ export interface Booking {
   subtotal?: number;
   discount?: number;
   totalAmount?: number;
+  completedAt?: string;
 }
 
 export interface Product {

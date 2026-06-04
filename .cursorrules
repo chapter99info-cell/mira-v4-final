@@ -1,0 +1,111 @@
+# Project Vision: Mira Thai Massage Website
+# File: .cursorrules — place at project root
+# Chapter99 Solutions | Sydney, Australia
+
+## 1. Goal
+Build a professional PWA website for Mira Thai Massage
+in Altona VIC, Australia. Target audience: local Australian
+customers searching for Thai massage, remedial massage,
+and HICAPS health fund services.
+
+Business details:
+- Name: Mira Thai Massage (MIRA Massage)
+- Address: Level 1/76 Pier St, Altona VIC 3018
+- Booking system: Receptionerapp (mira.book.receptionerapp.com)
+- Services: Remedial, Relaxation, Deep Tissue, Couple Massage
+- Health Fund: HICAPS accepted
+- Language: English primary, Thai secondary
+
+## 2. Technical Stack
+- Framework: React + TypeScript + Vite
+- Hosting: Vercel (auto-deploy from GitHub)
+- Repo: github.com/chapter99info-cell/mira-v4-final
+- Domain: mirathaimassage.com.au
+- Styling: Tailwind CSS (no custom CSS unless critical)
+- Animation: Framer Motion — subtle scroll fade only
+- Icons: Lucide React
+- NO Firebase — removed completely
+- NO Supabase — static site, no database needed
+
+## 3. Design System
+Brand colors (use ONLY these — no new colors):
+- Primary green: #2D5016 (dark forest green)
+- Secondary gold: #C8A84B (warm gold)
+- Background: #FFFFFF (white) / #F8F5F0 (warm off-white)
+- Text primary: #1A1A1A
+- Text muted: #6B7280
+- CTA button: #2D5016 background, white text
+
+Typography:
+- Headings: font-serif (Georgia or similar)
+- Body: font-sans (Inter or system)
+- Thai text: Noto Sans Thai
+
+Spacing system: use Tailwind defaults only (p-4, gap-6, etc.)
+
+## 4. SEO + AI Friendly Rules (MANDATORY)
+Every page MUST include:
+- <title> with location: "Mira Thai Massage Altona | HICAPS"
+- <meta name="description"> under 160 characters
+- LocalBusiness JSON-LD schema with:
+  name, address, telephone, openingHours, priceRange,
+  acceptsReservations, hasMap, url
+- FAQ section with minimum 5 Q&A pairs
+- NAP consistent: Name/Address/Phone same on every page
+- og:title, og:description, og:image for social sharing
+- sitemap.xml and robots.txt at root
+
+AI-friendly content rules:
+- Answer questions directly in plain language
+- Include "Do you accept health fund?" → "Yes, HICAPS"
+- Include service descriptions as complete sentences
+- Use structured headings (h1 → h2 → h3 only)
+
+## 5. Security Rules (NON-NEGOTIABLE)
+- No API keys of any kind in source code
+- No Firebase imports — project uses zero Firebase
+- .env file must exist in .gitignore
+- No sensitive business data in client-side code
+- console.log allowed only in development mode
+
+## 6. Component Rules
+Booking buttons:
+- Primary CTA: "BOOK NOW / จองคิว" → links to Receptionerapp
+- Gift voucher: "BUY GIFT VOUCHER / บัตรของขวัญ" → Receptionerapp
+- Never build custom booking — always use Receptionerapp link
+
+Image rules:
+- Format: WebP preferred, JPG fallback
+- Always include alt text in English and Thai
+- Lazy loading on all images below the fold
+- Hero image must load in < 1 second
+
+Animation rules:
+- Scroll-triggered fade-in: opacity 0 → 1, translateY 20px → 0
+- Stagger delay: 0.1s between items maximum
+- Duration: 0.4s maximum
+- NO bounce, NO spin, NO complex keyframes
+
+## 7. Development Workflow
+- Check tailwind.config.ts for existing tokens FIRST
+- New components go in /src/components/[name]/index.tsx
+- Each component is self-contained with its own types
+- git commit message format: "feat: [description]"
+- Use Sonnet model — NEVER Opus unless explicitly asked
+- NEVER use Multitask mode
+- After every new feature: git add . && git commit && git push
+
+## 8. Current Task
+[REPLACE THIS: Describe the specific feature to build]
+Example: "Add FAQ section below services with HICAPS question"
+Example: "Add Google Maps embed near contact section"
+Example: "Add client hero WebP to public/images/hero.webp"
+
+## 9. Constraints
+- Headlines: 8 words maximum
+- Subheadlines: one sentence, specific outcome
+- No flashy animations — professional spa feeling
+- Button text: action-oriented (Book Now / จองเลย)
+- Page must load under 3 seconds on 4G mobile
+- All text must be readable at 14px minimum
+- Maintain bilingual consistency: if English added, add Thai too

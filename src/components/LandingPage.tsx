@@ -7,14 +7,15 @@ import { CustomerReviews } from './CustomerReviews';
 import { UpsellModal } from './UpsellModal';
 import { V4Dashboard } from './V4Dashboard';
 import { StaffEntryForm } from './StaffEntryForm';
-import { useFirebaseUrl } from '../firebase';
-
 interface LandingPageProps {
   onBookNow: (service?: Service, withCoconut?: boolean, duration?: number) => void;
 }
 
+const HERO_FALLBACK =
+  'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=1600&h=900';
+
 export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
-  const heroImageUrl = useFirebaseUrl(brandConfig.heroImage);
+  const [heroImageUrl, setHeroImageUrl] = useState(brandConfig.heroImage);
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<'All' | 'Standard' | 'Remedial'>('All');
   const [showLogin, setShowLogin] = useState(false);
@@ -54,7 +55,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md py-4 shadow-lg border-b border-beige/10' : 'bg-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <img src={brandConfig.logo} alt="MIRA Logo" className="w-10 h-10 rounded-full object-cover border border-[#C5A059] shadow-sm" referrerPolicy="no-referrer" />
+            <img
+              src={brandConfig.logo}
+              alt="MIRA Massage logo / โลโก้มิรา"
+              className="w-10 h-10 rounded-full object-cover border border-[#C5A059] shadow-sm"
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                e.currentTarget.src = HERO_FALLBACK;
+              }}
+            />
             <span className={`font-serif font-bold text-lg tracking-tight transition-colors ${isScrolled ? 'text-primary' : 'text-white'}`}>
               MIRA Massage
             </span>
@@ -103,10 +112,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
             </video>
           ) : (
             <img 
-              src={heroImageUrl || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=1200&h=800"} 
-              alt="MIRA Hero" 
+              src={heroImageUrl || HERO_FALLBACK} 
+              alt="Mira Thai Massage Altona — Thai relaxation massage / นวดไทยอัลตונה"
               className="w-full h-full object-cover object-center transition-transform duration-1000"
               referrerPolicy="no-referrer"
+              onError={() => setHeroImageUrl(HERO_FALLBACK)}
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-white" />
@@ -244,10 +254,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                 </video>
               ) : (
                 <img 
-                  src={heroImageUrl || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=1200&h=800"} 
-                  alt="Atmosphere" 
+                  src={heroImageUrl || HERO_FALLBACK} 
+                  alt="Mira Thai Massage atmosphere / บรรยากาศร้านนวดมิรา"
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
+                  onError={() => setHeroImageUrl(HERO_FALLBACK)}
                 />
               )}
             </div>
@@ -696,7 +707,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
       {auth?.role === 'SuperAdmin' && (
         <div className="fixed inset-0 z-50 bg-white">
           <button className="p-4" onClick={() => setAuth(null)}>Close</button>
-          <V4Dashboard />
+          <V4Dashboard mode="owner-dashboard" />
         </div>
       )}
       {auth?.role === 'Staff' && (

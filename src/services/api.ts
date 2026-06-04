@@ -1,135 +1,73 @@
 import { Service, Staff, Booking } from '../types';
-import { db, handleFirestoreError, OperationType } from '../firebase';
-import { 
-  collection, 
-  getDocs, 
-  addDoc, 
-  query, 
-  where, 
-  orderBy, 
-  Timestamp,
-  doc,
-  setDoc,
-  getDoc
-} from 'firebase/firestore';
 import { brandConfig } from '../brandConfig';
+import { readJson, writeJson, newId } from '../lib/localStore';
 
-/**
- * API Service Layer
- * Using Firestore for real data persistence.
- */
+const BOOKINGS_KEY = 'bookings';
+
+function getBookingsFromStore(): Booking[] {
+  return readJson<Booking[]>(BOOKINGS_KEY, []);
+}
+
+function saveBookings(bookings: Booking[]): void {
+  writeJson(BOOKINGS_KEY, bookings);
+  window.dispatchEvent(new CustomEvent('mira-bookings-changed'));
+}
 
 export const apiService = {
-  getServices: async (): Promise<Service[]> => {
-    const path = 'services';
-    try {
-      const snapshot = await getDocs(collection(db, path));
-      if (snapshot.empty) {
-        // Seed if empty
-        await apiService.seedServices();
-        return brandConfig.services;
-      }
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Service));
-    } catch (error) {
-      handleFirestoreError(error, OperationType.GET, path);
-      return [];
-    }
-  },
+  getServices: async (): Promise<Service[]> => brandConfig.services,
 
-  seedServices: async () => {
-    const path = 'services';
-    try {
-      for (const service of brandConfig.services) {
-        const { id, ...data } = service;
-        await setDoc(doc(db, path, id), data);
-      }
-    } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, path);
-    }
-  },
-
-  getStaff: async (): Promise<Staff[]> => {
-    const path = 'staff';
-    try {
-      const snapshot = await getDocs(collection(db, path));
-      if (snapshot.empty) {
-        // Seed if empty
-        await apiService.seedStaff();
-        return brandConfig.staff;
-      }
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Staff));
-    } catch (error) {
-      handleFirestoreError(error, OperationType.GET, path);
-      return [];
-    }
-  },
-
-  seedStaff: async () => {
-    const path = 'staff';
-    try {
-      for (const staffMember of brandConfig.staff) {
-        const { id, ...data } = staffMember;
-        await setDoc(doc(db, path, id), data);
-      }
-    } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, path);
-    }
-  },
+  getStaff: async (): Promise<Staff[]> => brandConfig.staff,
 
   getBookings: async (userId?: string): Promise<Booking[]> => {
-    const path = 'bookings';
-    try {
-      let q = query(collection(db, path), orderBy('createdAt', 'desc'));
-      if (userId) {
-        q = query(collection(db, path), where('clientId', '==', userId), orderBy('createdAt', 'desc'));
-      }
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Booking));
-    } catch (error) {
-      handleFirestoreError(error, OperationType.GET, path);
-      return [];
-    }
+    const all = getBookingsFromStore().sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+    if (!userId) return all;
+    return all.filter((b) => b.clientId === userId);
+  },
+
+  subscribeBookings: (onChange: (bookings: Booking[]) => void): (() => void) => {
+    const emit = () => {
+      void apiService.getBookings().then(onChange);
+    };
+    emit();
+    const onCustom = () => emit();
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === `mira_v4_${BOOKINGS_KEY}`) emit();
+    };
+    window.addEventListener('mira-bookings-changed', onCustom);
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener('mira-bookings-changed', onCustom);
+      window.removeEventListener('storage', onStorage);
+    };
   },
 
   createBooking: async (booking: Omit<Booking, 'id' | 'status'>): Promise<Booking> => {
-    const path = 'bookings';
-    try {
-      const docRef = await addDoc(collection(db, path), {
-        ...booking,
-        status: 'confirmed',
-        createdAt: new Date().toISOString()
-      });
-      const newDoc = await getDoc(docRef);
-      return { id: docRef.id, ...newDoc.data() } as Booking;
-    } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, path);
-      throw error;
-    }
+    const created: Booking = {
+      ...booking,
+      id: newId(),
+      status: 'confirmed',
+      createdAt: booking.createdAt || new Date().toISOString(),
+    };
+    const next = [created, ...getBookingsFromStore()];
+    saveBookings(next);
+    return created;
   },
 
   updateBooking: async (id: string, data: Partial<Booking>): Promise<void> => {
-    const path = 'bookings';
-    try {
-      await setDoc(doc(db, path, id), data, { merge: true });
-    } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, path);
-      throw error;
-    }
+    const next = getBookingsFromStore().map((b) =>
+      b.id === id ? { ...b, ...data } : b
+    );
+    saveBookings(next);
   },
 
   getStats: async () => {
-    const path = 'bookings';
-    try {
-      // For demo purposes, we'll still use some randomization but based on real services
-      const services = await apiService.getServices();
-      return services.map(s => ({
-        name: s.name.substring(0, 2),
-        amount: Math.floor(Math.random() * 300) + 50,
-        customers: Math.floor(Math.random() * 50) + 10
-      }));
-    } catch (error) {
-      handleFirestoreError(error, OperationType.GET, path);
-      return [];
-    }
-  }
+    const services = await apiService.getServices();
+    return services.map((s) => ({
+      name: s.name.substring(0, 2),
+      amount: Math.floor(Math.random() * 300) + 50,
+      customers: Math.floor(Math.random() * 50) + 10,
+    }));
+  },
 };
