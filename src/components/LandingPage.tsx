@@ -7,7 +7,7 @@ import { CustomerReviews } from './CustomerReviews';
 import { UpsellModal } from './UpsellModal';
 import { V4Dashboard } from './V4Dashboard';
 import { StaffEntryForm } from './StaffEntryForm';
-import { HERO_IMAGE_URL, SERVICE_CARD_IMAGE_URL } from '../lib/mediaUrls';
+import { HERO_IMAGE_URL, HERO_VIDEO_URL, SERVICE_CARD_IMAGE_URL } from '../lib/mediaUrls';
 
 interface LandingPageProps {
   onBookNow: (service?: Service, withCoconut?: boolean, duration?: number) => void;
@@ -102,31 +102,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
 
       {/* Header (The Hero) */}
       <section className="relative h-[70vh] md:h-[85vh] flex flex-col items-center justify-start overflow-hidden">
-        {/* Mural Background with Gradient Fade */}
-        <div className="absolute inset-0 bg-neutral-800">
-          {brandConfig.promoVideo ? (
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster={HERO_IMAGE_URL}
-              className="w-full h-full object-cover object-center"
-            >
-              <source src={brandConfig.promoVideo} type="video/mp4" />
-            </video>
-          ) : (
-            <img
-              src={heroImageUrl || HERO_IMAGE_URL}
-              alt="Mira Thai Massage Altona — Thai relaxation massage / นวดไทยอัลตונה"
-              className="w-full h-full object-cover object-center transition-transform duration-1000"
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              onError={() => setHeroImageUrl(HERO_IMAGE_URL)}
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-white" />
+        <div className="absolute inset-0 bg-neutral-900">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster={brandConfig.heroImage || HERO_IMAGE_URL}
+            className="absolute inset-0 h-full w-full object-cover object-center"
+            aria-hidden
+          >
+            <source src={brandConfig.heroVideo || HERO_VIDEO_URL} type="video/mp4" />
+          </video>
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.45)' }}
+            aria-hidden
+          />
         </div>
         
         {/* Circular Logo */}
