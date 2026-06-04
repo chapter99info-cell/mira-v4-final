@@ -7,15 +7,20 @@ import { CustomerReviews } from './CustomerReviews';
 import { UpsellModal } from './UpsellModal';
 import { V4Dashboard } from './V4Dashboard';
 import { StaffEntryForm } from './StaffEntryForm';
+import { HERO_IMAGE_URL, SERVICE_CARD_IMAGE_URL } from '../lib/mediaUrls';
+
 interface LandingPageProps {
   onBookNow: (service?: Service, withCoconut?: boolean, duration?: number) => void;
 }
 
-const HERO_FALLBACK =
-  'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=1600&h=900';
+function serviceImageSrc(url: string | undefined): string {
+  const trimmed = url?.trim();
+  if (!trimmed || trimmed.startsWith('gs://')) return SERVICE_CARD_IMAGE_URL;
+  return trimmed;
+}
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
-  const [heroImageUrl, setHeroImageUrl] = useState(brandConfig.heroImage);
+  const [heroImageUrl, setHeroImageUrl] = useState(brandConfig.heroImage || HERO_IMAGE_URL);
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<'All' | 'Standard' | 'Remedial'>('All');
   const [showLogin, setShowLogin] = useState(false);
@@ -59,9 +64,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
               src={brandConfig.logo}
               alt="MIRA Massage logo / โลโก้มิรา"
               className="w-10 h-10 rounded-full object-cover border border-[#C5A059] shadow-sm"
-              referrerPolicy="no-referrer"
               onError={(e) => {
-                e.currentTarget.src = HERO_FALLBACK;
+                e.currentTarget.src = HERO_IMAGE_URL;
               }}
             />
             <span className={`font-serif font-bold text-lg tracking-tight transition-colors ${isScrolled ? 'text-primary' : 'text-white'}`}>
@@ -99,24 +103,27 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
       {/* Header (The Hero) */}
       <section className="relative h-[70vh] md:h-[85vh] flex flex-col items-center justify-start overflow-hidden">
         {/* Mural Background with Gradient Fade */}
-        <div className="absolute inset-0 bg-neutral-900">
-          {heroImageUrl && (heroImageUrl.toLowerCase().includes('.mp4') || heroImageUrl.toLowerCase().includes('.webm') || heroImageUrl.toLowerCase().includes('/vdo/') || heroImageUrl.toLowerCase().includes('/vdo%2f')) ? (
-            <video 
-              autoPlay 
-              loop 
-              muted 
+        <div className="absolute inset-0 bg-neutral-800">
+          {brandConfig.promoVideo ? (
+            <video
+              autoPlay
+              loop
+              muted
               playsInline
+              poster={HERO_IMAGE_URL}
               className="w-full h-full object-cover object-center"
             >
-              <source src={heroImageUrl} type="video/mp4" />
+              <source src={brandConfig.promoVideo} type="video/mp4" />
             </video>
           ) : (
-            <img 
-              src={heroImageUrl || HERO_FALLBACK} 
+            <img
+              src={heroImageUrl || HERO_IMAGE_URL}
               alt="Mira Thai Massage Altona — Thai relaxation massage / นวดไทยอัลตונה"
               className="w-full h-full object-cover object-center transition-transform duration-1000"
-              referrerPolicy="no-referrer"
-              onError={() => setHeroImageUrl(HERO_FALLBACK)}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              onError={() => setHeroImageUrl(HERO_IMAGE_URL)}
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-white" />
@@ -253,12 +260,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                   <source src={(brandConfig as any).promoVideo} type="video/mp4" />
                 </video>
               ) : (
-                <img 
-                  src={heroImageUrl || HERO_FALLBACK} 
+                <img
+                  src={heroImageUrl || HERO_IMAGE_URL}
                   alt="Mira Thai Massage atmosphere / บรรยากาศร้านนวดมิรา"
                   className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                  onError={() => setHeroImageUrl(HERO_FALLBACK)}
+                  loading="lazy"
+                  onError={() => setHeroImageUrl(HERO_IMAGE_URL)}
                 />
               )}
             </div>
@@ -315,7 +322,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                     className="bg-section rounded-[2.5rem] p-6 border border-primary/5 cursor-pointer group flex gap-6 items-center"
                   >
                     <div className="relative w-32 h-32 rounded-2xl overflow-hidden flex-shrink-0 shadow-lg">
-                      <img src={service.image} alt={service.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      <img
+                        src={serviceImageSrc(service.image)}
+                        alt={service.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.src = SERVICE_CARD_IMAGE_URL;
+                        }}
+                      />
                       <div className="absolute inset-0 bg-black/10" />
                     </div>
                     <div className="space-y-2">
@@ -341,24 +356,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                 className="group bg-white rounded-[3rem] shadow-xl shadow-earth/5 border border-beige/10 cursor-pointer transition-all hover:border-primary/20 overflow-hidden"
                 onClick={handleBookNow}
               >
-                <div className="relative w-full aspect-[4/3]">
-                  {service.video ? (
-                    <video 
-                      autoPlay 
-                      loop 
-                      muted 
-                      playsInline
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    >
-                      <source src={service.video} type="video/mp4" />
-                    </video>
-                  ) : (
-                    <img 
-                      src={service.image} 
-                      alt={service.name} 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                  )}
+                <div className="relative w-full aspect-[4/3] bg-section">
+                  <img
+                    src={serviceImageSrc(service.image)}
+                    alt={service.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.src = SERVICE_CARD_IMAGE_URL;
+                    }}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
                   <div className="absolute bottom-6 left-6 right-6">
                     <h3 className="text-2xl font-serif font-bold text-white mb-1 leading-tight">

@@ -1,4 +1,5 @@
 import { Service, Staff, Holiday } from './types';
+import { HERO_IMAGE_URL, SERVICE_CARD_IMAGE_URL, LOGO_IMAGE_URL } from './lib/mediaUrls';
 
 export const brandConfig = {
   name: "Mira Thai Massage Altona (HICAPS)",
@@ -8,16 +9,16 @@ export const brandConfig = {
   bookingUrl: "https://mira.book.receptionerapp.com/",
   googleReviewLink: "https://maps.app.goo.gl/L2fyvazbuX3s56Rj8",
   email: "miraremedial@gmail.com",
-  logo: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=200&h=200",
-  heroImage: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=1600&h=900",
+  logo: LOGO_IMAGE_URL,
+  heroImage: HERO_IMAGE_URL,
   promoVideo: "",
   colors: {
-    primary: "#4A5D23", // Deep Moss Green
-    secondary: "#C5A059", // Antique Gold
+    primary: "#4A5D23",
+    secondary: "#C5A059",
     background: "#FFFFFF",
-    section: "#FAFAF5", // Soft Cream
-    earth: "#2D2A26", // Dark Earth
-    sage: "#8A9A5B", // Lighter Sage
+    section: "#FAFAF5",
+    earth: "#2D2A26",
+    sage: "#8A9A5B",
   },
   services: [
     {
@@ -27,7 +28,7 @@ export const brandConfig = {
       fullPrice: 90,
       depositAmount: 30,
       duration: 60,
-      image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=800&h=600",
+      image: HERO_IMAGE_URL,
       rates: { "30": 60, "45": 75, "60": 90, "90": 130 },
       bestFor: "Stress relief & pure relaxation",
       keyBenefits: ["Stress Relief", "Gentle Stretching", "Aromatherapy"],
@@ -41,7 +42,7 @@ export const brandConfig = {
       fullPrice: 95,
       depositAmount: 30,
       duration: 60,
-      image: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&q=80&w=800&h=600",
+      image: SERVICE_CARD_IMAGE_URL,
       rates: { "30": 65, "45": 80, "60": 95, "90": 135 },
       bestFor: "Chronic muscle tension & knots",
       keyBenefits: ["Muscle Recovery", "Firm Pressure", "Tension Release"],
@@ -50,11 +51,11 @@ export const brandConfig = {
     {
       id: "thai-massage-no-oil",
       name: "Thai Massage without oil",
-      description: "The authentic \"dry\" Thai massage. This treatment focuses on acupressure and passive yoga-like stretching to open the body’s energy lines and improve flexibility. No oil is used, and you will feel lighter and more aligned.",
+      description: "The authentic \"dry\" Thai massage. This treatment focuses on acupressure and passive yoga-like stretching to open the body's energy lines and improve flexibility. No oil is used, and you will feel lighter and more aligned.",
       fullPrice: 95,
       depositAmount: 30,
       duration: 60,
-      image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&q=80&w=800&h=600",
+      image: SERVICE_CARD_IMAGE_URL,
       rates: { "30": 65, "45": 80, "60": 95, "90": 135 },
       bestFor: "Flexibility & traditional alignment",
       keyBenefits: ["Improved Flexibility", "Traditional Techniques", "Non-Greasy"],
@@ -67,7 +68,7 @@ export const brandConfig = {
       fullPrice: 100,
       depositAmount: 40,
       duration: 60,
-      image: "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&q=80&w=800&h=600",
+      image: SERVICE_CARD_IMAGE_URL,
       rates: { "30": 70, "60": 100, "90": 150, "120": 200 },
       bestFor: "Specific",
       keyBenefits: ["Professional Therapy", "Targeted Healing", "Certified Care"],
@@ -80,7 +81,7 @@ export const brandConfig = {
       fullPrice: 105,
       depositAmount: 40,
       duration: 60,
-      image: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&q=80&w=800&h=600",
+      image: SERVICE_CARD_IMAGE_URL,
       rates: { "30": 75, "60": 105, "90": 155, "120": 205 },
       bestFor: "Severe muscle tightness & structural imbalances",
       keyBenefits: ["Maximum Pain Relief", "Clinical Expertise", "Deep Muscle Alignment"],
@@ -93,7 +94,7 @@ export const brandConfig = {
       id: "therapist-male",
       name: "Male Therapist",
       role: "Professional Therapist",
-      avatar: "https://images.unsplash.com/photo-1570172619644-dfdcef25e93d?auto=format&fit=crop&q=80&w=200&h=200",
+      avatar: SERVICE_CARD_IMAGE_URL,
       specialties: ["Thai Traditional", "Deep Tissue", "Remedial"],
       status: 'Working',
       isAccredited: true,
@@ -103,7 +104,7 @@ export const brandConfig = {
       id: "therapist-female",
       name: "Female Therapist",
       role: "Professional Therapist",
-      avatar: "https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?auto=format&fit=crop&q=80&w=200&h=200",
+      avatar: "https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=200&q=80",
       specialties: ["Thai Traditional", "Relaxation", "Remedial"],
       status: 'Working',
       isAccredited: true,
