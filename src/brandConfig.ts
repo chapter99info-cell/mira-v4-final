@@ -78,7 +78,7 @@ export const brandConfig = {
       fullPrice: 100,
       depositAmount: 40,
       duration: 60,
-      image: SERVICE_CARD_IMAGE_URL,
+      image: "https://euiwkvozrhnbxttfuchh.supabase.co/storage/v1/object/public/mira-assets/Mira%20web/service%20cards/oil_hand.png",
       rates: { "30": 70, "60": 100, "90": 150, "120": 200 },
       bestFor: "Specific",
       keyBenefits: ["Professional Therapy", "Targeted Healing", "Certified Care"],
