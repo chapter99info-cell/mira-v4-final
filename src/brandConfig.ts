@@ -1,5 +1,5 @@
 import { Service, Staff, Holiday } from './types';
-import { HERO_IMAGE_URL, HERO_VIDEO_URL, SERVICE_CARD_IMAGE_URL, LOGO_IMAGE_URL } from './lib/mediaUrls';
+import { HERO_IMAGE_URL, HERO_VIDEO_URL, MIND_BODY_VIDEO_URL, SERVICE_CARD_IMAGE_URL, LOGO_IMAGE_URL } from './lib/mediaUrls';
 
 export const brandConfig = {
   name: "Mira Thai Massage Altona (HICAPS)",
@@ -12,6 +12,7 @@ export const brandConfig = {
   logo: LOGO_IMAGE_URL,
   heroImage: HERO_IMAGE_URL,
   heroVideo: HERO_VIDEO_URL,
+  mindBodyVideo: MIND_BODY_VIDEO_URL,
   promoVideo: "",
   colors: {
     primary: "#4A5D23",

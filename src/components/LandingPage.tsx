@@ -7,7 +7,7 @@ import { CustomerReviews } from './CustomerReviews';
 import { UpsellModal } from './UpsellModal';
 import { V4Dashboard } from './V4Dashboard';
 import { StaffEntryForm } from './StaffEntryForm';
-import { HERO_IMAGE_URL, HERO_VIDEO_URL, SERVICE_CARD_IMAGE_URL } from '../lib/mediaUrls';
+import { HERO_IMAGE_URL, HERO_VIDEO_URL, MIND_BODY_VIDEO_URL, SERVICE_CARD_IMAGE_URL } from '../lib/mediaUrls';
 
 interface LandingPageProps {
   onBookNow: (service?: Service, withCoconut?: boolean, duration?: number) => void;
@@ -230,26 +230,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
             className="relative"
           >
             <div className="relative aspect-video rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white bg-beige/10">
-              {(brandConfig as any).promoVideo ? (
-                <video 
-                  key={(brandConfig as any).promoVideo}
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline
-                  className="w-full h-full object-cover"
-                >
-                  <source src={(brandConfig as any).promoVideo} type="video/mp4" />
-                </video>
-              ) : (
-                <img
-                  src={heroImageUrl || HERO_IMAGE_URL}
-                  alt="Mira Thai Massage atmosphere / บรรยากาศร้านนวดมิรา"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  onError={() => setHeroImageUrl(HERO_IMAGE_URL)}
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                poster={brandConfig.heroImage || HERO_IMAGE_URL}
+                className="h-full w-full object-cover"
+                aria-label="Mira Thai Massage oil treatment atmosphere video"
+              >
+                <source
+                  src={(brandConfig as { mindBodyVideo?: string }).mindBodyVideo || MIND_BODY_VIDEO_URL}
+                  type="video/mp4"
                 />
-              )}
+              </video>
             </div>
             
             {/* Simple Badge */}
