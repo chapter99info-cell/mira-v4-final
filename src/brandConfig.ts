@@ -1,5 +1,12 @@
 import { Service, Staff, Holiday } from './types';
-import { HERO_IMAGE_URL, HERO_VIDEO_URL, MIND_BODY_VIDEO_URL, SERVICE_CARD_IMAGE_URL, LOGO_IMAGE_URL } from './lib/mediaUrls';
+import {
+  HERO_IMAGE_URL,
+  HERO_VIDEO_URL,
+  MIND_BODY_VIDEO_URL,
+  THAI_MASSAGE_NO_OIL_VIDEO_URL,
+  SERVICE_CARD_IMAGE_URL,
+  LOGO_IMAGE_URL,
+} from './lib/mediaUrls';
 
 export const brandConfig = {
   name: "Mira Thai Massage Altona (HICAPS)",
@@ -58,6 +65,7 @@ export const brandConfig = {
       depositAmount: 30,
       duration: 60,
       image: SERVICE_CARD_IMAGE_URL,
+      video: THAI_MASSAGE_NO_OIL_VIDEO_URL,
       rates: { "30": 65, "45": 80, "60": 95, "90": 135 },
       bestFor: "Flexibility & traditional alignment",
       keyBenefits: ["Improved Flexibility", "Traditional Techniques", "Non-Greasy"],

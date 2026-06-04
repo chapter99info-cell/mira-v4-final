@@ -19,6 +19,42 @@ function serviceImageSrc(url: string | undefined): string {
   return trimmed;
 }
 
+function ServiceCardMedia({
+  service,
+  className,
+}: {
+  service: Service;
+  className: string;
+}) {
+  if (service.video) {
+    return (
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        poster={serviceImageSrc(service.image)}
+        className={className}
+        aria-label={service.name}
+      >
+        <source src={service.video} type="video/mp4" />
+      </video>
+    );
+  }
+  return (
+    <img
+      src={serviceImageSrc(service.image)}
+      alt={service.name}
+      className={className}
+      loading="lazy"
+      onError={(e) => {
+        e.currentTarget.src = SERVICE_CARD_IMAGE_URL;
+      }}
+    />
+  );
+}
+
 export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
   const [heroImageUrl, setHeroImageUrl] = useState(brandConfig.heroImage || HERO_IMAGE_URL);
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
@@ -299,14 +335,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                     className="bg-section rounded-[2.5rem] p-6 border border-primary/5 cursor-pointer group flex gap-6 items-center"
                   >
                     <div className="relative w-32 h-32 rounded-2xl overflow-hidden flex-shrink-0 shadow-lg">
-                      <img
-                        src={serviceImageSrc(service.image)}
-                        alt={service.name}
+                      <ServiceCardMedia
+                        service={service}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        loading="lazy"
-                        onError={(e) => {
-                          e.currentTarget.src = SERVICE_CARD_IMAGE_URL;
-                        }}
                       />
                       <div className="absolute inset-0 bg-black/10" />
                     </div>
@@ -333,15 +364,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
                 className="group bg-white rounded-[3rem] shadow-xl shadow-earth/5 border border-beige/10 cursor-pointer transition-all hover:border-primary/20 overflow-hidden"
                 onClick={handleBookNow}
               >
-                <div className="relative w-full aspect-[4/3] bg-section">
-                  <img
-                    src={serviceImageSrc(service.image)}
-                    alt={service.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.src = SERVICE_CARD_IMAGE_URL;
-                    }}
+                <div className="relative w-full aspect-[4/3] bg-section overflow-hidden rounded-t-[3rem]">
+                  <ServiceCardMedia
+                    service={service}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
                   <div className="absolute bottom-6 left-6 right-6">
