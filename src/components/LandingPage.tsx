@@ -7,7 +7,7 @@ import { CustomerReviews } from './CustomerReviews';
 import { UpsellModal } from './UpsellModal';
 import { V4Dashboard } from './V4Dashboard';
 import { StaffEntryForm } from './StaffEntryForm';
-import { HERO_IMAGE_URL, HERO_VIDEO_URL, MIND_BODY_VIDEO_URL, SERVICE_CARD_IMAGE_URL } from '../lib/mediaUrls';
+import { HERO_IMAGE_URL, MIND_BODY_VIDEO_URL, SERVICE_CARD_IMAGE_URL } from '../lib/mediaUrls';
 
 interface LandingPageProps {
   onBookNow: (service?: Service, withCoconut?: boolean, duration?: number) => void;
@@ -56,7 +56,6 @@ function ServiceCardMedia({
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
-  const [heroImageUrl, setHeroImageUrl] = useState(brandConfig.heroImage || HERO_IMAGE_URL);
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<'All' | 'Standard' | 'Remedial'>('All');
   const [showLogin, setShowLogin] = useState(false);
@@ -147,18 +146,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
       {/* Header (The Hero) */}
       <section className="relative h-[70vh] md:h-[85vh] flex flex-col items-center justify-start overflow-hidden">
         <div className="absolute inset-0 bg-neutral-900">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster={brandConfig.heroImage || HERO_IMAGE_URL}
+          <img
+            src={brandConfig.heroImage || HERO_IMAGE_URL}
+            alt="Mira Thai Massage — hero"
             className="absolute inset-0 h-full w-full object-cover object-center"
-            aria-hidden
-          >
-            <source src={brandConfig.heroVideo || HERO_VIDEO_URL} type="video/mp4" />
-          </video>
+            fetchPriority="high"
+            decoding="async"
+          />
           <div
             className="absolute inset-0 pointer-events-none"
             style={{ backgroundColor: 'rgba(0, 0, 0, 0.45)' }}

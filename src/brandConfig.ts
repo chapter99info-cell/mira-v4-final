@@ -1,7 +1,6 @@
 import { Service, Staff, Holiday } from './types';
 import {
   HERO_IMAGE_URL,
-  HERO_VIDEO_URL,
   MIND_BODY_VIDEO_URL,
   THAI_MASSAGE_NO_OIL_VIDEO_URL,
   SERVICE_CARD_IMAGE_URL,
@@ -18,7 +17,6 @@ export const brandConfig = {
   email: "miraremedial@gmail.com",
   logo: LOGO_IMAGE_URL,
   heroImage: HERO_IMAGE_URL,
-  heroVideo: HERO_VIDEO_URL,
   mindBodyVideo: MIND_BODY_VIDEO_URL,
   promoVideo: "",
   colors: {
@@ -37,7 +35,7 @@ export const brandConfig = {
       fullPrice: 90,
       depositAmount: 30,
       duration: 60,
-      image: HERO_IMAGE_URL,
+      image: SERVICE_CARD_IMAGE_URL,
       rates: { "30": 60, "45": 75, "60": 90, "90": 130 },
       bestFor: "Stress relief & pure relaxation",
       keyBenefits: ["Stress Relief", "Gentle Stretching", "Aromatherapy"],
