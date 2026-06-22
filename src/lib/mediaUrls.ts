@@ -1,6 +1,6 @@
 /** Stable CDN URLs — Supabase public bucket + Unsplash fallbacks */
 export const HERO_VIDEO_URL =
-  'https://euiwkvozrhnbxttfuchh.supabase.co/storage/v1/object/public/mira-assets/Mira%20web/VDO/cover_mira.mp4';
+  'https://euiwkvozrhnbxttfuchh.supabase.co/storage/v1/object/public/mira-assets/Mira%20web/VDO/0622(3).mp4';
 
 export const MIND_BODY_VIDEO_URL =
   'https://euiwkvozrhnbxttfuchh.supabase.co/storage/v1/object/public/mira-assets/Mira%20web/VDO/Mix02.mp4';
