@@ -17,7 +17,8 @@ export const brandConfig = {
   description: "Experience Thai Combination Massage with premium Magnesium Oil therapy — designed to relieve muscle tension, reduce stress, support recovery, and promote deep relaxation",
   location: "Level 1/76 Pier Street, Altona 3018",
   phone: "0466992456",
-  bookingUrl: "https://mira.book.receptionerapp.com/",
+  bookingUrl:
+    "https://www.fresha.com/en-GB/a/mira-thai-massage-melbourne-76-pier-street-p9e8k3je/all-offer?share=true&menu=true&pId=2996212",
   googleReviewLink: "https://maps.app.goo.gl/L2fyvazbuX3s56Rj8",
   email: "miraremedial@gmail.com",
   logo: LOGO_IMAGE_URL,

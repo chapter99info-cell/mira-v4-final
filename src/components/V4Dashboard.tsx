@@ -161,7 +161,7 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
 
         {activeTab === 'config' && mode === 'admin-config' && (
           <div className="bg-white p-8 rounded-[2rem] border border-beige/20 text-earth/60 text-sm">
-            Edit services, staff, and holidays in <code className="text-primary">src/brandConfig.ts</code>. Public bookings use Receptionerapp.
+            Edit services, staff, and holidays in <code className="text-primary">src/brandConfig.ts</code>. Public bookings use Fresha.
           </div>
         )}
 

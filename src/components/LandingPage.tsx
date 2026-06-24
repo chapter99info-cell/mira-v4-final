@@ -192,7 +192,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
               </div>
               <div className="text-left flex-grow">
                 <p className="text-sm md:text-base font-bold uppercase tracking-[0.15em] text-white">BOOK NOW</p>
-                <p className="text-xs text-white/80 font-normal">Reserve your session / จองนวดเพื่อความผ่อนคลาย</p>
+                <p className="text-xs text-white/80 font-normal">Reserve your session</p>
               </div>
               <ChevronRight size={18} className="text-white/40 flex-shrink-0" />
             </motion.a>
@@ -212,7 +212,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
               </div>
               <div className="text-left flex-grow">
                 <p className="text-sm md:text-base font-bold uppercase tracking-[0.15em]">BUY GIFT VOUCHER</p>
-                <p className="text-xs text-[#2D2A26]/75 font-normal">The perfect gift of relaxation / ซื้อบัตรของขวัญกิ๊ฟต์วอยเชอร์</p>
+                <p className="text-xs text-[#2D2A26]/75 font-normal">The perfect gift of relaxation</p>
               </div>
               <ChevronRight size={18} className="text-[#4A5D23]/40 flex-shrink-0" />
             </motion.a>

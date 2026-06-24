@@ -11,7 +11,7 @@ and HICAPS health fund services.
 Business details:
 - Name: Mira Thai Massage (MIRA Massage)
 - Address: Level 1/76 Pier St, Altona VIC 3018
-- Booking system: Receptionerapp (mira.book.receptionerapp.com)
+- Booking system: Fresha (https://www.fresha.com/en-GB/a/mira-thai-massage-melbourne-76-pier-street-p9e8k3je/all-offer?share=true&menu=true&pId=2996212)
 - Services: Remedial, Relaxation, Deep Tissue, Couple Massage
 - Health Fund: HICAPS accepted
 - Language: English primary, Thai secondary
@@ -70,9 +70,9 @@ AI-friendly content rules:
 
 ## 6. Component Rules
 Booking buttons:
-- Primary CTA: "BOOK NOW / จองคิว" → links to Receptionerapp
-- Gift voucher: "BUY GIFT VOUCHER / บัตรของขวัญ" → Receptionerapp
-- Never build custom booking — always use Receptionerapp link
+- Primary CTA: "BOOK NOW / จองคิว" → links to Fresha (brandConfig.bookingUrl)
+- Gift voucher: "BUY GIFT VOUCHER / บัตรของขวัญ" → Fresha (brandConfig.bookingUrl)
+- Never build custom booking — always use Fresha link via brandConfig.bookingUrl
 
 Image rules:
 - Format: WebP preferred, JPG fallback
