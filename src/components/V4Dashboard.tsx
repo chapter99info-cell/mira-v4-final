@@ -45,7 +45,7 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
     if (!selectedBooking) return;
 
     try {
-      const almondOilPrice = useAlmondOil ? 10 : 0;
+      const almondOilPrice = useAlmondOil ? 5 : 0;
       const finalPrice = selectedBooking.price + almondOilPrice - discount;
 
       await apiService.updateBooking(selectedBooking.id, {
@@ -231,7 +231,7 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
             <h3 className="text-xl font-serif font-bold text-primary">Complete Job</h3>
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" checked={useAlmondOil} onChange={(e) => setUseAlmondOil(e.target.checked)} />
-              Almond oil (+$10)
+              Almond oil (+$5)
             </label>
             <div>
               <label className="text-xs font-bold text-earth/40 uppercase">Discount ($)</label>
