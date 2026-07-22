@@ -26,7 +26,7 @@ const BANNER_BASE =
   'https://euiwkvozrhnbxttfuchh.supabase.co/storage/v1/object/public/mira-assets/Mira%20web/Banner';
 
 export const THAI_SHOP_BANNER_IMAGES = [
-  `${BANNER_BASE}/12f9078e-34c6-4616-9b24-44a9dbde7dee.jpg`,
-  `${BANNER_BASE}/6a83a601-c657-43f4-82da-98a070897a14.jpg`,
-  `${BANNER_BASE}/4cfec0ed-b12a-4bad-9e69-6d2cb88e6833.jpg`,
+  `${BANNER_BASE}/01.avif`,
+  `${BANNER_BASE}/02.avif`,
+  `${BANNER_BASE}/04.jpg`,
 ] as const;

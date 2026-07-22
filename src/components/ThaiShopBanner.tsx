@@ -14,7 +14,7 @@ export const ThaiShopBanner = () => {
       <div className="max-w-5xl mx-auto px-6">
         <a
           href={brandConfig.thaiShopUrl}
-          className="thai-shop-banner group relative flex flex-col gap-5 rounded-[16px] px-5 py-5 sm:flex-row sm:items-center sm:gap-6 sm:px-6 sm:py-5 md:gap-8"
+          className="thai-shop-banner group relative flex flex-col gap-6 rounded-[16px] px-5 py-6 sm:flex-row sm:items-center sm:gap-7 sm:px-7 sm:py-6 md:gap-9 md:px-8 md:py-7"
         >
           {/* Clip layer for gradients + shine (keeps collage from being cropped) */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[16px]" aria-hidden>
@@ -31,24 +31,24 @@ export const ThaiShopBanner = () => {
             <span className="thai-shop-sparkle thai-shop-sparkle-3 absolute" />
           </div>
 
-          {/* Left: overlapping product collage — 3 photos, diagonal stack */}
-          <div className="relative z-10 h-[88px] w-[120px] shrink-0">
+          {/* Left: overlapping product collage — large eye-catching stack */}
+          <div className="relative z-10 mx-auto h-[148px] w-[210px] shrink-0 sm:mx-0 sm:h-[168px] sm:w-[240px] md:h-[188px] md:w-[270px]">
             {THAI_SHOP_BANNER_IMAGES.map((src, i) => {
               const stack = [
-                'left-0 top-3 z-30 -rotate-[8deg]',
-                'left-[28px] top-0 z-20 rotate-[5deg]',
-                'left-[56px] top-4 z-10 -rotate-[3deg]',
+                'left-0 top-5 z-30 -rotate-[8deg] sm:top-6',
+                'left-[48px] top-0 z-20 rotate-[5deg] sm:left-[56px] md:left-[64px]',
+                'left-[96px] top-7 z-10 -rotate-[3deg] sm:left-[112px] sm:top-8 md:left-[128px]',
               ] as const;
               return (
                 <img
                   key={src}
                   src={src}
                   alt={PRODUCT_ALTS[i]}
-                  width={56}
-                  height={56}
+                  width={112}
+                  height={112}
                   loading="lazy"
                   decoding="async"
-                  className={`absolute h-14 w-14 rounded-full border-2 border-[#C8A84B] bg-[#1a1a1a] object-cover shadow-[0_4px_14px_rgba(0,0,0,0.55)] ${stack[i]}`}
+                  className={`absolute h-[104px] w-[104px] rounded-full border-[3px] border-[#C8A84B] bg-[#1a1a1a] object-cover shadow-[0_8px_28px_rgba(0,0,0,0.65)] ring-2 ring-[#C8A84B]/30 transition-transform duration-300 group-hover:scale-105 sm:h-[120px] sm:w-[120px] md:h-[132px] md:w-[132px] ${stack[i]}`}
                 />
               );
             })}
