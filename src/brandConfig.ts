@@ -19,6 +19,8 @@ export const brandConfig = {
   phone: "0466992456",
   bookingUrl:
     "https://www.fresha.com/en-GB/a/mira-thai-massage-melbourne-76-pier-street-p9e8k3je/all-offer?share=true&menu=true&pId=2996212",
+  thaiShopUrl:
+    "https://www.fresha.com/en-GB/store/mira-wellness-thai-shop-sqh4uhc4?share=true&pId=2996212",
   googleReviewLink: "https://maps.app.goo.gl/L2fyvazbuX3s56Rj8",
   email: "miraremedial@gmail.com",
   logo: LOGO_IMAGE_URL,

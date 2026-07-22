@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { Clock, DollarSign, ChevronRight, MapPin, Phone, Instagram, Facebook, Sparkles, Mail, ShieldCheck, Calendar, Gift } from 'lucide-react';
 import { Service } from '../types';
 import { CustomerReviews } from './CustomerReviews';
+import { ThaiShopBanner } from './ThaiShopBanner';
 import { UpsellModal } from './UpsellModal';
 import { V4Dashboard } from './V4Dashboard';
 import { StaffEntryForm } from './StaffEntryForm';
@@ -441,6 +442,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBookNow }) => {
 
       {/* Customer Reviews Section */}
       <CustomerReviews />
+
+      {/* Mira Wellness & Thai Shop promo */}
+      <ThaiShopBanner />
 
       {/* Find Us Section (Strictly Stacked) */}
       <section id="location" className="py-24 bg-white">
