@@ -16,46 +16,44 @@ export const ThaiShopBanner = () => {
           href={brandConfig.thaiShopUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="thai-shop-banner group relative flex flex-col gap-5 overflow-hidden rounded-[16px] px-5 py-5 sm:flex-row sm:items-center sm:gap-6 sm:px-6 sm:py-5 md:gap-8"
+          className="thai-shop-banner group relative flex flex-col gap-5 rounded-[16px] px-5 py-5 sm:flex-row sm:items-center sm:gap-6 sm:px-6 sm:py-5 md:gap-8"
         >
-          {/* Soft gold radial atmosphere */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse 80% 70% at 12% 50%, rgba(200,168,75,0.22) 0%, transparent 55%), radial-gradient(ellipse 60% 80% at 88% 40%, rgba(197,160,89,0.16) 0%, transparent 50%), radial-gradient(circle at 50% 120%, rgba(200,168,75,0.08) 0%, transparent 40%)',
-            }}
-          />
+          {/* Clip layer for gradients + shine (keeps collage from being cropped) */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[16px]" aria-hidden>
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  'radial-gradient(ellipse 80% 70% at 12% 50%, rgba(200,168,75,0.22) 0%, transparent 55%), radial-gradient(ellipse 60% 80% at 88% 40%, rgba(197,160,89,0.16) 0%, transparent 50%), radial-gradient(circle at 50% 120%, rgba(200,168,75,0.08) 0%, transparent 40%)',
+              }}
+            />
+            <div className="thai-shop-banner-shine absolute inset-y-0 -left-1/3 w-1/3" />
+            <span className="thai-shop-sparkle thai-shop-sparkle-1 absolute" />
+            <span className="thai-shop-sparkle thai-shop-sparkle-2 absolute" />
+            <span className="thai-shop-sparkle thai-shop-sparkle-3 absolute" />
+          </div>
 
-          {/* Diagonal shine sweep */}
-          <div className="thai-shop-banner-shine pointer-events-none absolute inset-y-0 -left-1/3 w-1/3" aria-hidden />
-
-          {/* Twinkling sparkles */}
-          <span className="thai-shop-sparkle thai-shop-sparkle-1 pointer-events-none absolute" aria-hidden />
-          <span className="thai-shop-sparkle thai-shop-sparkle-2 pointer-events-none absolute" aria-hidden />
-          <span className="thai-shop-sparkle thai-shop-sparkle-3 pointer-events-none absolute" aria-hidden />
-
-          {/* Left: overlapping product collage */}
-          <div className="relative z-10 flex shrink-0 items-center pl-1 pt-1">
-            <div className="relative h-[68px] w-[92px]">
-              {THAI_SHOP_BANNER_IMAGES.map((src, i) => (
+          {/* Left: overlapping product collage — 3 photos, diagonal stack */}
+          <div className="relative z-10 h-[88px] w-[120px] shrink-0">
+            {THAI_SHOP_BANNER_IMAGES.map((src, i) => {
+              const stack = [
+                'left-0 top-3 z-30 -rotate-[8deg]',
+                'left-[28px] top-0 z-20 rotate-[5deg]',
+                'left-[56px] top-4 z-10 -rotate-[3deg]',
+              ] as const;
+              return (
                 <img
                   key={src}
                   src={src}
                   alt={PRODUCT_ALTS[i]}
-                  width={52}
-                  height={52}
+                  width={56}
+                  height={56}
                   loading="lazy"
                   decoding="async"
-                  className="absolute h-[52px] w-[52px] rounded-full border-2 border-[#C8A84B] object-cover shadow-[0_4px_12px_rgba(0,0,0,0.45)]"
-                  style={{
-                    left: i * 14,
-                    top: i * 6,
-                    zIndex: 3 - i,
-                  }}
+                  className={`absolute h-14 w-14 rounded-full border-2 border-[#C8A84B] bg-[#1a1a1a] object-cover shadow-[0_4px_14px_rgba(0,0,0,0.55)] ${stack[i]}`}
                 />
-              ))}
-            </div>
+              );
+            })}
           </div>
 
           {/* Centre: copy */}
