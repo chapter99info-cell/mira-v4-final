@@ -14,8 +14,6 @@ export const ThaiShopBanner = () => {
       <div className="max-w-5xl mx-auto px-6">
         <a
           href={brandConfig.thaiShopUrl}
-          target="_blank"
-          rel="noopener noreferrer"
           className="thai-shop-banner group relative flex flex-col gap-5 rounded-[16px] px-5 py-5 sm:flex-row sm:items-center sm:gap-6 sm:px-6 sm:py-5 md:gap-8"
         >
           {/* Clip layer for gradients + shine (keeps collage from being cropped) */}
