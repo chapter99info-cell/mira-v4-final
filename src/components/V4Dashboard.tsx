@@ -6,11 +6,17 @@ import {
   Clock,
   TrendingUp,
   LogOut,
+  Volume2,
+  VolumeX,
+  BellRing,
 } from 'lucide-react';
 import { Booking, Service } from '../types';
 import { brandConfig } from '../brandConfig';
 import { apiService } from '../services/api';
 import { ReceiptForm } from './ReceiptForm';
+import { NotificationToast } from './NotificationToast';
+import { useBookingNotifications } from '../hooks/useBookingNotifications';
+import { isSupabaseConfigured } from '../lib/supabase';
 
 interface V4DashboardProps {
   mode: 'staff-pos' | 'owner-dashboard' | 'admin-config';
@@ -26,6 +32,16 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
   const [discount, setDiscount] = useState(0);
   const [hicapsFilter, setHicapsFilter] = useState<'all' | 'hicaps' | 'private'>('all');
   const [activeTab, setActiveTab] = useState<'bookings' | 'config' | 'receipt'>('bookings');
+
+  const {
+    toast,
+    dismissToast,
+    muted,
+    toggleMute,
+    audioUnlocked,
+    unlockAudio,
+    isListening,
+  } = useBookingNotifications(brandConfig.shopId);
 
   const filteredBookings = bookings.filter((b) => {
     if (hicapsFilter === 'hicaps') return b.serviceName.toLowerCase().includes('hicaps');
@@ -85,6 +101,22 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
 
   return (
     <div className="min-h-screen bg-section p-6 md:p-12 font-sans">
+      <NotificationToast toast={toast} onDismiss={dismissToast} />
+
+      {/* iOS Safari: audio is blocked until a user gesture — one tap unlocks ding + TTS for the session. */}
+      {!audioUnlocked && (
+        <div className="fixed bottom-4 left-4 right-4 z-[290] mx-auto max-w-md">
+          <button
+            type="button"
+            onClick={unlockAudio}
+            className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-6 py-4 text-sm font-bold text-white shadow-xl shadow-primary/20"
+          >
+            <BellRing size={20} />
+            Enable sound alerts / เปิดเสียงแจ้งเตือน
+          </button>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto space-y-12">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
@@ -92,7 +124,13 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
               {mode === 'staff-pos' ? 'Staff POS' : mode === 'admin-config' ? 'Admin Config' : 'Owner Dashboard'}
             </h1>
             <p className="text-earth/50 font-medium">Mira Remedial Thai Massage Management</p>
-            <p className="text-earth/40 text-xs mt-1">Bookings stored locally in this browser (no Firebase).</p>
+            <p className="text-earth/40 text-xs mt-1">
+              {isSupabaseConfigured
+                ? isListening
+                  ? 'Live booking alerts on · แจ้งเตือนจองคิวแบบเรียลไทม์'
+                  : 'Connecting live alerts…'
+                : 'Bookings stored locally (set VITE_SUPABASE_* for live alerts).'}
+            </p>
           </div>
           <div className="flex items-center gap-4">
             {mode === 'owner-dashboard' && (
@@ -101,6 +139,20 @@ export const V4Dashboard: React.FC<V4DashboardProps> = ({ mode }) => {
                 <p className="text-xl font-serif font-bold text-primary">${totalRevenue.toFixed(2)}</p>
               </div>
             )}
+            <button
+              type="button"
+              onClick={toggleMute}
+              className={`w-12 h-12 rounded-2xl shadow-sm border border-beige/20 flex items-center justify-center transition-all ${
+                muted
+                  ? 'bg-earth/5 text-earth/40'
+                  : 'bg-white text-primary hover:bg-primary/5'
+              }`}
+              title={muted ? 'Unmute alerts / เปิดเสียง' : 'Mute alerts / ปิดเสียง'}
+              aria-pressed={muted}
+              aria-label={muted ? 'Unmute booking alerts' : 'Mute booking alerts'}
+            >
+              {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+            </button>
             <button
               onClick={handleLogout}
               className="w-12 h-12 bg-white rounded-2xl shadow-sm border border-beige/20 flex items-center justify-center text-earth/40 hover:text-rose-500 transition-all"
